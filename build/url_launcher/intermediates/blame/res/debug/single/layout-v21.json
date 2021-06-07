@@ -1,0 +1,18 @@
+[
+    {
+        "merged": "F:\\myproducts\\student\\app3\\build\\url_launcher\\intermediates\\res\\merged\\debug\\layout-v21\\notification_action.xml",
+        "source": "C:\\Users\\al-zaki\\.gradle\\caches\\transforms-2\\files-2.1\\74e9fb4808d4f6e0ba1306f0ee6a5129\\core-1.1.0\\res\\layout-v21\\notification_action.xml"
+    },
+    {
+        "merged": "F:\\myproducts\\student\\app3\\build\\url_launcher\\intermediates\\res\\merged\\debug\\layout-v21\\notification_template_icon_group.xml",
+        "source": "C:\\Users\\al-zaki\\.gradle\\caches\\transforms-2\\files-2.1\\74e9fb4808d4f6e0ba1306f0ee6a5129\\core-1.1.0\\res\\layout-v21\\notification_template_icon_group.xml"
+    },
+    {
+        "merged": "F:\\myproducts\\student\\app3\\build\\url_launcher\\intermediates\\res\\merged\\debug\\layout-v21\\notification_template_custom_big.xml",
+        "source": "C:\\Users\\al-zaki\\.gradle\\caches\\transforms-2\\files-2.1\\74e9fb4808d4f6e0ba1306f0ee6a5129\\core-1.1.0\\res\\layout-v21\\notification_template_custom_big.xml"
+    },
+    {
+        "merged": "F:\\myproducts\\student\\app3\\build\\url_launcher\\intermediates\\res\\merged\\debug\\layout-v21\\notification_action_tombstone.xml",
+        "source": "C:\\Users\\al-zaki\\.gradle\\caches\\transforms-2\\files-2.1\\74e9fb4808d4f6e0ba1306f0ee6a5129\\core-1.1.0\\res\\layout-v21\\notification_action_tombstone.xml"
+    }
+]
