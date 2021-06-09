@@ -55,10 +55,10 @@ class _SubjectsState extends State<Subjects> {
                 return Center(
                   child: Text(snapshot.error.toString()),
                 );
-              }
+             }
               return ListView(
                 children: snapshot.data?.data
-                    .map((subject) => Card(
+                    ?.map((subject) => Card(
                           elevation: 8.0,
                           color: AppColors.surfaceColor,
                           shadowColor: AppColors.secondaryColor,
@@ -100,7 +100,7 @@ class _SubjectsState extends State<Subjects> {
                             }),
                           ),
                         ))
-                    .toList(),
+                    ?.toList(),
               );
             },
           ),
@@ -108,9 +108,9 @@ class _SubjectsState extends State<Subjects> {
         floatingActionButton: FloatingActionButton(
           backgroundColor: AppColors.secondaryColor,
           onPressed: () {
-            // Navigator.of(context).push(HeroDialogRoute(builder: (_) {
-            //   return AddSubject(widget.department ,widget.level);
-            // }));
+            Navigator.of(context).push(HeroDialogRoute(builder: (_) {
+              return AddSubject(widget.supervisor);
+            }));
           },
           child: Icon(Icons.add ,  color: AppColors.onSecondary),
          

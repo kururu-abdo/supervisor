@@ -52,8 +52,9 @@ main() async {
       child: MultiProvider(providers: [
         Provider<ServiceProvider>(create: (_) => ServiceProvider()),
         Provider<UserProvider>(create: (_) => UserProvider()),
-        Provider<MainProvider>(create: (_) => MainProvider()),
+       
         Provider<EventProvider>(create: (_) => EventProvider()),
+        ChangeNotifierProvider(create: (_)=> MainProvider())
       ], child: MyApp())));
 }
 

@@ -22,9 +22,9 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    var service_provider = Provider.of<ServiceProvider>(context);
+    var service_provider = Provider.of<ServiceProvider>(context ,listen:false);
 
-    var main_provider = Provider.of<MainProvider>(context);
+    var main_provider = Provider.of<MainProvider>(context ,  listen:false );
 debugPrint(MediaQuery.of(context).size.width.toString());
     return SafeArea(
       child: 

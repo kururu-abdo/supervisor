@@ -9,10 +9,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:load/load.dart';
 
-
-
 class MyPrpfole extends StatefulWidget {
-final Admin admin;
+  final Admin admin;
   MyPrpfole(this.admin);
 
   @override
@@ -20,56 +18,38 @@ final Admin admin;
 }
 
 class _MyPrpfoleState extends State<MyPrpfole> {
-
-
   @override
-  void initState() { 
+  void initState() {
     super.initState();
-    
 
     FirebaseInit.init();
-
-
-
-
-
-
   }
 
-  
   @override
   Widget build(BuildContext context) {
-var main_provider = Provider.of<MainProvider>(context);
-    Query admin = FirebaseFirestore.instance.collection('supervisor')
-     .where('id',isEqualTo: 
-      widget.admin.id
-      );
- return    Scaffold(
-   backgroundColor: AppColors.backgroundColor,
-  appBar: AppBar(
-    backgroundColor: AppColors.PrimaryColor,
+    var main_provider = Provider.of<MainProvider>(context);
+    Query admin = FirebaseFirestore.instance
+        .collection('supervisor')
+        .where('id', isEqualTo: widget.admin.id);
+    return Scaffold(
+      backgroundColor: AppColors.backgroundColor,
+      appBar: AppBar(
+        backgroundColor: AppColors.PrimaryColor,
         title: Text('الملف الشخصي'),
         centerTitle: true,
-       
       ),
-
-
-   body : FutureBuilder<QuerySnapshot>(
-     future: admin.get(),
-   
-     builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-
-    
-    
+      body: FutureBuilder<QuerySnapshot>(
+        future: admin.get(),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.hasError) {
             return Text("Something went wrong");
           }
 
           if (snapshot.connectionState == ConnectionState.done) {
-           debugPrint(snapshot.data.size.toString()); 
+            debugPrint(snapshot.data.size.toString());
             Map<String, dynamic> data = snapshot.data.docs.first.data();
-            
-       return Padding(
+
+            return Padding(
               padding: const EdgeInsets.all(0.0),
               child: ListView(
                 children: <Widget>[
@@ -78,8 +58,10 @@ var main_provider = Provider.of<MainProvider>(context);
                           gradient: LinearGradient(
                               begin: Alignment.topCenter,
                               end: Alignment.bottomCenter,
-                              colors: [AppColors.PrimaryColor,
-                              AppColors.primaryVariantColor2])),
+                              colors: [
+                            AppColors.PrimaryColor,
+                            AppColors.primaryVariantColor2
+                          ])),
                       child: Container(
                         width: double.infinity,
                         height: 350.0,
@@ -89,8 +71,8 @@ var main_provider = Provider.of<MainProvider>(context);
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
                               CircleAvatar(
-                                backgroundImage: NetworkImage(
-                                  "https://www.rd.com/wp-content/uploads/2017/09/01-shutterstock_476340928-Irina-Bg.jpg",
+                                backgroundImage: AssetImage(
+                                  "assets/images/user.jpg",
                                 ),
                                 radius: 50.0,
                               ),
@@ -120,7 +102,7 @@ var main_provider = Provider.of<MainProvider>(context);
                                       child: Text(
                                         "${data['address']}",
                                         style: TextStyle(
-                                          color:AppColors.onBackground,
+                                          color: AppColors.onBackground,
                                           fontSize: 22.0,
                                           fontWeight: FontWeight.bold,
                                         ),
@@ -157,11 +139,11 @@ var main_provider = Provider.of<MainProvider>(context);
                                 Center(
                                     child: ListTile(
                                   title: Text('${data['phone']}'),
-                                  trailing: IconButton(
-                                      icon: Icon(Icons.edit ,  color: AppColors.secondaryVariantColor,),
-                                      onPressed: () async {
-//                                        await editPhone(context);
-                                      }),
+//                                   trailing: IconButton(
+//                                       icon: Icon(Icons.edit ,  color: AppColors.secondaryVariantColor,),
+//                                       onPressed: () async {
+// //                                        await editPhone(context);
+//                                       }),
                                 )
 
                                     //  Row(
@@ -178,35 +160,31 @@ var main_provider = Provider.of<MainProvider>(context);
                                 Center(
                                     child: ListTile(
                                   title: Text('${data['name']}'),
-                                  trailing: IconButton(icon: Icon(Icons.edit,color: AppColors.secondaryVariantColor,) ,onPressed: () async{
-  //                                 await  editAddres(context);
-                                  },),
-                                )
+                                  //                                 trailing: IconButton(icon: Icon(Icons.edit,color: AppColors.secondaryVariantColor,) ,onPressed: () async{
+                                  // //                                 await  editAddres(context);
+                                  //                                 },),
+                                )),
+                                //                         Center(
 
-                                    ),
-            //                         Center(
+                                // //child:Text(semesters[1].toJson().toString())
 
-            // //child:Text(semesters[1].toJson().toString())
+                                //                       child:   new DropdownButtonFormField<Semester>(
+                                //                       value: semester,
+                                //                       items:semesters.map((sem){
+                                //                         // debugPrint(sem.toJson().toString());
+                                //                         return DropdownMenuItem<Semester>(
 
+                                //                                 value: sem,
+                                //                                   child: Text(sem.name),);
+                                //                                    }).toList(),
+                                //                       onChanged: (newValue){
+                                //                         setState(() {
+                                //                           semester=newValue;
+                                //                         });
+                                //                       },
+                                //                     ),
 
-            //                       child:   new DropdownButtonFormField<Semester>(
-            //                       value: semester,
-            //                       items:semesters.map((sem){
-            //                         // debugPrint(sem.toJson().toString());
-            //                         return DropdownMenuItem<Semester>(
-    
-            //                                 value: sem,
-            //                                   child: Text(sem.name),);
-            //                                    }).toList(),
-            //                       onChanged: (newValue){
-            //                         setState(() {
-            //                           semester=newValue;
-            //                         });
-            //                       },
-            //                     ),
-
-            //                         )
-
+                                //                         )
                               ],
                             )),
                           )
@@ -262,20 +240,20 @@ var main_provider = Provider.of<MainProvider>(context);
                 ],
               ),
             );
-
-
-
           }
 
-return Center(
-    child: CircularProgressIndicator(),
-);
-
-     },
-   ),
- );
- 
- 
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        },
+      ),
+      // floatingActionButton: new FloatingActionButton(
+      //   onPressed: () {},
+      //   child: Icon(
+      //     Icons.edit,
+      //   ),
+      // ),
+    );
   }
 
 //  editPhone( BuildContext context)  async {
@@ -291,12 +269,11 @@ return Center(
 
 //             keyboardType: TextInputType.number,
 //             onChanged: (value) {
-     
+
 //             },
 //             controller: idController,
 //             decoration: InputDecoration(hintText: "الرقم الجامعي"),
 //           ),
-
 
 //           actions: <Widget>[
 
@@ -316,7 +293,6 @@ return Center(
 //                textColor: Colors.white,
 //                child: Text('OK'),
 //                onPressed: () async {
-                 
 
 //                             CollectionReference students =
 //                       FirebaseFirestore.instance.collection('student');
@@ -339,21 +315,18 @@ return Center(
 //                   }
 //                await    studentProvider.updateId(idController.text);
 
-
-
-
 //                                   setState(() {
 //                                    //  codeDialog = valueText;
 //                                     Navigator.pop(context);
 //                                   });
 //                                 },
 //                               ),
-                   
+
 //                             ],
 //                          );
 //                        });
 //                  }
-                 
+
 //                   editAddres( BuildContext context)  async {
 //          showDialog(
 //         context: context,
@@ -408,23 +381,18 @@ return Center(
 // print(current_teacer.docs.toString());
 
 // var doc_id=    current_teacer.docs.first.id;
-                           
-//                     debugPrint(doc_id);       
+
+//                     debugPrint(doc_id);
 //                             if (idController.text.length>0) {
-                            
-                            
+
 //    await              students
-                            
+
 //                  .doc(doc_id)
-                             
-                            
-                             
-                              
+
 //     .update({'id_number': '${idController.text}'});
 //                             }
 //     provider.updateId(idController.text);
-// }    
-
+// }
 
 // updateAddress() async {
 //     CollectionReference teachers =
@@ -436,7 +404,6 @@ return Center(
 //         .where('id', isEqualTo: int.parse(widget.student.id_number))
 //         .get();
 
-
 //     var doc_id = current_teacer.docs.first.id;
 
 //     if (idController.text.length > 0) {
@@ -446,10 +413,24 @@ return Center(
 //           .then((value) => print("User Updated"))
 //           .catchError((error) => print("Failed to update user: $error"));
 //     }
-//   }    
+//   }
 
+}
 
+class EditProfile extends StatefulWidget {
+  EditProfile({Key key}) : super(key: key);
 
-                 }
-                 
-    
+  @override
+  _EditProfileState createState() => _EditProfileState();
+}
+
+class _EditProfileState extends State<EditProfile> {
+  @override
+  Widget build(BuildContext context) {
+    var main_provider = Provider.of<MainProvider>(context);
+    // Query admin = FirebaseFirestore.instance
+    //     .collection('supervisor')
+    //     .where('id', isEqualTo: widget.admin.id);
+    return Container();
+  }
+}

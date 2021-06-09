@@ -116,24 +116,29 @@ class MainProvider  extends ChangeNotifier {
     yield subjects;
   }
 
-  Future<void> addSubject(ClassSubject subject) async {
+  Future<DocumentReference> addSubject(ClassSubject subject) async {
     var future = await showLoadingDialog();
 
     CollectionReference data =
         await FirebaseFirestore.instance.collection('subject');
 
-    await data.add({
+var insertedData =    await data.add({
       'id': subject.id,
       'name': subject.name,
       'dept': subject.department.toJson(),
       'level': subject.level.toJson(),
       'semester': subject.semester.toJson(),
-      'teacher': subject.teacher == null ? null : subject.teacher.toJson()
-    }).then((value) {
-      Get.defaultDialog(title: 'تمت إضافة المادة بنجاح');
+      'teacher_id': subject.teacher == null ? null : subject.teacher.id
     });
+     
+    
 
     future.dismiss();
+
+     Get.defaultDialog(title: 'تمت إضافة المادة بنجاح'   ,content: Text('تم'));
+
+
+     return insertedData;
   }
 
   Future<void> updateSubject(ClassSubject subject) async {
@@ -350,10 +355,18 @@ if (data.docs.length>0) {
           .get();
           
           if (data.docs.length>0) {
-             List<ClassSubject> subjects =
-            data.docs.map((e) => ClassSubject.fromJson(e.data())).toList();
-       
-        return APIresponse<List<ClassSubject>>(data: subjects);
+          
+
+
+          try {
+               List<ClassSubject> subjects =
+              data.docs.map((e) => ClassSubject.fromJson(e.data())).toList();
+         
+          return APIresponse<List<ClassSubject>>(data: subjects);
+          } catch (e) {
+            debugPrint('/////////////');
+            debugPrint(e.toString());
+          }
           }
              return APIresponse<List<ClassSubject>>(data: []);
 

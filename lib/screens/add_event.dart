@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:app3/model/models/supervisor.dart';
+import 'package:app3/screens/add_files.dart';
+import 'package:app3/util/app_colors.dart';
 import 'package:app3/util/util.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -761,20 +763,20 @@ class _AddEventState extends State<AddEvent> {
 
                         // ),
 
-                        Row(children: [
-                          Text('اضافة ملفات'),
+                        // Row(children: [
+                        //   Text('اضافة ملفات'),
 
-                          IconButton(
-                            icon: Icon(Icons.file_copy),
-                            onPressed: () async {
-                              _pickDocument();
-                            },
-                          ),
+                        //   IconButton(
+                        //     icon: Icon(Icons.file_copy),
+                        //     onPressed: () async {
+                        //       _pickDocument();
+                        //     },
+                        //   ),
 
-                          //LecureFiles
+                        //   //LecureFiles
 
-                          Text('ملفات  ${LecureFiles.length}')
-                        ]),
+                        //   Text('ملفات  ${LecureFiles.length}')
+                        // ]),
 
                         ///TODO:gridview for files
                         // Container(
@@ -791,82 +793,16 @@ class _AddEventState extends State<AddEvent> {
                                 borderRadius: BorderRadius.horizontal(
                                     left: Radius.circular(20),
                                     right: Radius.circular(20))),
+
+                                    color: AppColors.PrimaryColor,
                             minWidth: double.infinity,
                             onPressed: () async {
-                              //await upload files then send data to firebase
-
-                              if (await service_provider.checkInternet()) {
-                                await UploadFilesToBackendless(); //await here
-
-                                //
-
-                                await Future.delayed(
-                                    Duration(seconds: 2)); // abd  here
-
-                                //send data to the firebase
-
-                                FilesTouploads.forEach((element) async {
-                                  print(
-                                      '////////////////////////////////////////');
-
-                                  print(element);
-                                });
-
-                                CollectionReference lecture = FirebaseFirestore
-                                    .instance
-                                    .collection('events');
-
-                                var uuid =
-                                    Uuid(options: {'grng': UuidUtil.cryptoRNG});
-
-                                var data = await lecture.add({
-                                  'id': uuid.v1(),
-
-                                  'time': DateTime.now(),
-
-                                  'title': titleController.text,
-
-                                  'body': titleController.text, // John Doe
-
-                                  'files': FilesTouploads, // Stokes and Sons
-
-                                  'dept': supervisor.dept?.toJson() ?? null,
-
-                                  'level': this.level?.toJson() ?? null
-                                });
-
-                                var firebase_data = await data.get();
-
-                                setState(() {
-                                  event_data = firebase_data;
-                                });
-
-                                print(event_data.data().toString());
-
-                                FCMConfig.subscripeToTopic(
-                                    'event' + event_data.data()['id']);
-
-                                debugPrint('event' + event_data.data()['id']);
-
-                                await sendAndRetrieveMessage(event_data.data());
-
-                                // .then((value) => print("lecures Added"))
-
-                                // .catchError((error) => print("Failed to add user: $error"));
-
-                                Get.back();
-                              } else {
-                                Fluttertoast.showToast(
-                                    msg: "تأكد من أتصالك بالانترنت ^_^",
-                                    toastLength: Toast.LENGTH_SHORT,
-                                    gravity: ToastGravity.BOTTOM,
-                                    timeInSecForIosWeb: 1,
-                                    backgroundColor: Colors.red,
-                                    textColor: Colors.white,
-                                    fontSize: 16.0);
-                              }
+                          if (_formKey.currentState.validate()) {
+                              Get.to(AddFiles(titleController.text,
+                                    bodyController.text, level));
+                          }
                             },
-                            child: Text('نشر الخبر'))
+                            child: Text('متابعة ' ,   style: TextStyle(fontWeight: FontWeight.bold),))
 
                         // Add TextFormFields and ElevatedButton here.
                       ])),
@@ -876,233 +812,7 @@ class _AddEventState extends State<AddEvent> {
           )),
     );
 
-    return Center(
-        child: Padding(
-            padding: const EdgeInsets.all(32.0),
-            child: Hero(
-                tag: '',
-                createRectTween: (begin, end) {
-                  return CustomRectTween(begin: begin, end: end);
-                },
-                child: Material(
-                    // color: Colors.white24,
-                    elevation: 2,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(32)),
-                    child: SingleChildScrollView(
-                        child: Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Card(
-                              child: Form(
-                                  key: _formKey,
-                                  child: Column(children: <Widget>[
-                                    TextFormField(
-                                      controller: bodyController,
-                                      decoration: InputDecoration(
-                                        // contentPadding: EdgeInsets.all(8.0),
-
-                                        labelText: 'title...',
-                                        enabledBorder: new UnderlineInputBorder(
-                                            borderSide: new BorderSide(
-                                                color: Colors.blue)),
-                                        focusedBorder: UnderlineInputBorder(
-                                          borderSide:
-                                              BorderSide(color: Colors.orange),
-                                        ),
-                                      ),
-                                    ),
-                                    TextFormField(
-                                      controller: titleController,
-                                      maxLines: 10,
-                                      decoration: InputDecoration(
-                                        // contentPadding: EdgeInsets.all(8.0),
-
-                                        labelText: 'topic...',
-                                        enabledBorder: new UnderlineInputBorder(
-                                            borderSide: new BorderSide(
-                                                color: Colors.blue)),
-                                        focusedBorder: UnderlineInputBorder(
-                                          borderSide:
-                                              BorderSide(color: Colors.orange),
-                                        ),
-                                      ),
-                                      // The validator receives the text that the user has entered.
-                                      validator: (value) {
-                                        if (value.isEmpty) {
-                                          return 'Please enter some text';
-                                        }
-                                        return null;
-                                      },
-                                    ),
-
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
-                                        color: Colors.grey[300],
-                                      ),
-                                      child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 10.0),
-                                          child: Row(children: [
-                                            Text('المستوى',
-                                                style: TextStyle(
-                                                    color: Colors.black)),
-                                            Container(),
-                                            new DropdownButton<Level>(
-                                              value: level,
-                                              items: levels.map((lev) {
-                                                return DropdownMenuItem<Level>(
-                                                  value: lev,
-                                                  child: Text(lev.name,
-                                                      style: TextStyle(
-                                                          color: Colors.black)),
-                                                );
-                                              }).toList(),
-                                              onChanged: (newValue) {
-                                                setState(() {
-                                                  level = newValue;
-                                                });
-                                              },
-                                            )
-                                          ])),
-                                    ),
-
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
-                                        color: Colors.grey[300],
-                                      ),
-                                      child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 10.0),
-                                          child: Row(children: [
-                                            Text('التخصص',
-                                                style: TextStyle(
-                                                    color: Colors.black)),
-                                            Container(),
-                                            new DropdownButton<Department>(
-                                              value: dept,
-                                              items: depts.map((dept) {
-                                                return DropdownMenuItem<
-                                                    Department>(
-                                                  value: dept,
-                                                  child: Text(dept.name,
-                                                      style: TextStyle(
-                                                          color: Colors.black)),
-                                                );
-                                              }).toList(),
-                                              onChanged: (newValue) {
-                                                setState(() {
-                                                  dept = newValue;
-                                                });
-                                              },
-                                            )
-                                          ])),
-                                    ),
-
-                                    Row(children: [
-                                      Text('اضافة ملفات'),
-
-                                      IconButton(
-                                        icon: Icon(Icons.file_copy),
-                                        onPressed: () async {
-                                          _pickDocument();
-                                        },
-                                      ),
-//LecureFiles
-
-                                      Text('ملفات  ${LecureFiles.length}')
-                                    ]),
-
-                                    MaterialButton(
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.horizontal(
-                                                    left: Radius.circular(20),
-                                                    right:
-                                                        Radius.circular(20))),
-                                        minWidth: double.infinity,
-                                        onPressed: () async {
-//await upload files then send data to firebase
-
-                                          if (await service_provider
-                                              .checkInternet()) {
-                                            await UploadFilesToBackendless(); //await here
-//
-
-                                            await Future.delayed(Duration(
-                                                seconds: 2)); // abd  here
-
-//send data to the firebase
-
-                                            FilesTouploads.forEach(
-                                                (element) async {
-                                              print(
-                                                  '////////////////////////////////////////');
-                                              print(element);
-                                            });
-                                            CollectionReference lecture =
-                                                FirebaseFirestore.instance
-                                                    .collection('events');
-
-                                            var uuid = Uuid(options: {
-                                              'grng': UuidUtil.cryptoRNG
-                                            });
-                                            var data = await lecture.add({
-                                              'id': uuid.v1(),
-                                              'time': DateTime.now(),
-                                              'title': bodyController.text,
-                                              'body': titleController
-                                                  .text, // John Doe
-                                              'files':
-                                                  FilesTouploads, // Stokes and Sons
-                                              'dept':
-                                                  this.dept?.toJson() ?? null,
-                                              'level':
-                                                  this.level?.toJson() ?? null
-                                            });
-
-                                            var firebase_data =
-                                                await data.get();
-
-                                            setState(() {
-                                              event_data = firebase_data;
-                                            });
-
-                                            print(event_data.data().toString());
-                                            FCMConfig.subscripeToTopic('event' +
-                                                event_data.data()['id']);
-                                            debugPrint('event' +
-                                                event_data.data()['id']);
-
-                                            await sendAndRetrieveMessage(
-                                                event_data.data());
-                                            // .then((value) => print("lecures Added"))
-                                            // .catchError((error) => print("Failed to add user: $error"));
-                                            Get.back();
-                                          } else {
-                                            Fluttertoast.showToast(
-                                                msg:
-                                                    "تأكد من أتصالك بالانترنت ^_^",
-                                                toastLength: Toast.LENGTH_SHORT,
-                                                gravity: ToastGravity.BOTTOM,
-                                                timeInSecForIosWeb: 1,
-                                                backgroundColor: Colors.red,
-                                                textColor: Colors.white,
-                                                fontSize: 16.0);
-                                          }
-                                        },
-                                        child: Text('نشر الخبر'))
-
-                                    // Add TextFormFields and ElevatedButton here.
-                                  ])),
-                            )))))));
+  
   }
 
   _pickDocument() async {
