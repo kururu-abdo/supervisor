@@ -189,7 +189,15 @@ fill_array(){
                             )
                           : 
                           
-                  Text('no files'),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+
+
+                      Image.asset('assets/images/file_not_found.png') ,
+                      Text(' لا يحتوى الخبر على اية ملفات'),
+                    ],
+                  ),
                           
                           
                           
