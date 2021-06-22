@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:app3/logic/api_response.dart';
 import 'package:app3/logic/main_provider.dart';
 import 'package:app3/model/models/dept.dart';
@@ -6,14 +8,21 @@ import 'package:app3/model/models/student.dart';
 import 'package:app3/model/models/supervisor.dart';
 import 'package:app3/screens/add_subject.dart';
 import 'package:app3/util/app_colors.dart';
+import 'package:app3/util/constants.dart';
 import 'package:app3/util/custom_button.dart';
+import 'package:app3/util/fcm_config.dart';
 import 'package:app3/util/pop_up_card.dart';
 import 'package:app3/util/util.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
-
+import 'package:http/http.dart' as http;
+import 'package:load/load.dart';
+import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
+import 'package:uuid/uuid_util.dart';
 class Students extends StatefulWidget {
   final Department department;
 
@@ -501,7 +510,12 @@ setState(() {
 
 }
 
+@override
+void initState() { 
+  super.initState();
+    FCMConfig.fcmConfig();
 
+}
   @override
   Widget build(BuildContext context) {
     return   Scaffold(
@@ -519,7 +533,10 @@ mainAxisAlignment: MainAxisAlignment.spaceBetween,
   children: [CustomButton(onWarning, 'إنذار', Icons.warning, AppColors.errorColor) ,
   
   
-  CustomButton(onValuated, 'إشادة', Icons.title,AppColors.secondaryVariantColor)
+  CustomButton(onValuated, 'إشادة', Icons.done
+  
+  
+  ,AppColors.secondaryVariantColor)
   
   ], 
 
@@ -561,12 +578,15 @@ children: [
         maxLines:  50 ,
         decoration: InputDecoration(
           enabledBorder:  OutlineInputBorder(),
-          border: OutlineInputBorder()
+          
+          border: OutlineInputBorder(
+            
+          )
         ),
     
     validator: (str){
       if (str.length<0) {
-        return "قم بكتابة الرسالة";
+        return "قم بكتابة الانذار";
       }
       return null;
     },
@@ -585,8 +605,51 @@ children: [
         borderRadius: BorderRadius.all(Radius.circular(16.0))
       ),
       elevation: 16.0,
-      child: OutlinedButton(onPressed: (){
-    
+      child: OutlinedButton(onPressed: () async{
+     var future = await showLoadingDialog();
+
+                      CollectionReference warning =
+                          FirebaseFirestore.instance.collection('warnings');
+
+                      var uuid = Uuid(options: {'grng': UuidUtil.cryptoRNG});
+
+                      var data = await warning.add({
+                        'id': uuid.v1(), //process
+
+                        'time': DateTime.now(),
+
+                        'student_id': widget.student.id_number,
+
+                        'body': valueText.text, // John Doe
+                      });
+
+                      var firebase_data = await data.get();
+
+                      var response = await http.post(
+                        'https://fcm.googleapis.com/fcm/send',
+                        headers: <String, String>{
+                          'Content-Type': 'application/json',
+                          'Authorization': 'key=$serverToken',
+                        },
+                        body: jsonEncode(
+                          <String, dynamic>{
+                            'notification': <String, dynamic>{
+                              'body': 'إخطار جديد',
+                              'title': " لقد تم انذارك"
+                            },
+                            'priority': 'high',
+                            'data': <String, dynamic>{
+                              'click_action': 'FLUTTER_NOTIFICATION_CLICK',
+                              'id': firebase_data.data()["id"],
+                              'status': 'done',
+                              'screen': 'value_details',
+                              // 'event': event_data.data()['id']
+                            },
+                            'to': '/topics/${widget.student.id_number}'
+                          },
+                        ),
+                      );
+                      future.dismiss();
       }, child: Text('ابلاغ الطالب')),
     ),
   )
@@ -633,7 +696,59 @@ Widget valueForm(BuildContext context) {
                     borderRadius: BorderRadius.all(Radius.circular(16.0))),
                 elevation: 16.0,
                 child: OutlinedButton(
-                    onPressed: () {}, child: Text('نشر الاشادة')),
+                    onPressed: ()   async {
+
+var future =  await showLoadingDialog();
+
+  CollectionReference rating =
+                          FirebaseFirestore.instance.collection('rating');
+
+                      var uuid = Uuid(options: {'grng': UuidUtil.cryptoRNG});
+
+                      var data = await rating.add({
+                        'id': uuid.v1(),  //process
+
+                        'time': DateTime.now(),
+
+                        'student_id': widget.student.id_number,
+
+                        'body': valueText.text, // John Doe
+
+                        
+                      });
+
+                      var firebase_data = await data.get();
+
+
+
+
+
+ var response = await http.post(
+                        'https://fcm.googleapis.com/fcm/send',
+                        headers: <String, String>{
+                          'Content-Type': 'application/json',
+                          'Authorization': 'key=$serverToken',
+                        },
+                        body: jsonEncode(
+                          <String, dynamic>{
+                            'notification': <String, dynamic>{
+                              'body': 'إخطار جديد',
+                              'title': "لقد تم الاشادة بك"
+                            },
+                            'priority': 'high',
+                            'data': <String, dynamic>{
+                              'click_action': 'FLUTTER_NOTIFICATION_CLICK',
+                              'id': firebase_data.data()["id"],
+                              'status': 'done',
+                              'screen': 'value_details',
+                              // 'event': event_data.data()['id']
+                            },
+                            'to': '/topics/${widget.student.id_number}'
+                          },
+                        ),
+                      );
+future.dismiss();
+                    }, child: Text('نشر الاشادة')),
               ),
             )
           ],

@@ -5,6 +5,7 @@ import 'package:app3/logic/main_provider.dart';
 import 'package:app3/logic/services_provider.dart';
 import 'package:app3/logic/user_provider.dart';
 import 'package:app3/model/models/supervisor.dart';
+import 'package:app3/screens/add_event.dart';
 import 'package:app3/screens/departments.dart';
 import 'package:app3/screens/events.dart';
 import 'package:app3/screens/profile_page.dart';
@@ -319,8 +320,8 @@ backgroundColor: AppColors.backgroundColor
                       child: Column(
                         children: [
                           Container(
-                              height: 100,
-                              width: 100.0,
+                              height: 80,
+                              width: 80.0,
                               decoration: BoxDecoration(
                                   image: DecorationImage(
                                       image: AssetImage(
@@ -338,8 +339,8 @@ backgroundColor: AppColors.backgroundColor
                     child: Column(
                       children: [
                         Container(
-                            height: 100,
-                            width: 100.0,
+                           height: 80,
+                            width: 80.0,
                             decoration: BoxDecoration(
                                 image: DecorationImage(
                                     image:
@@ -357,8 +358,8 @@ backgroundColor: AppColors.backgroundColor
                     child: Column(
                       children: [
                         Container(
-                             height: 100,
-                            width: 100.0,
+                              height: 80,
+                            width: 80.0,
                             decoration: BoxDecoration(
                                 image: DecorationImage(
                                     image: AssetImage(
@@ -376,8 +377,8 @@ backgroundColor: AppColors.backgroundColor
                     child: Column(
                       children: [
                         Container(
-                              height: 100,
-                            width: 100.0,
+                             height: 80,
+                            width: 80.0,
                             decoration: BoxDecoration(
                                 image: DecorationImage(
                                     image: AssetImage(
@@ -395,8 +396,8 @@ backgroundColor: AppColors.backgroundColor
                     child: Column(
                       children: [
                         Container(
-                            height: 100,
-                            width: 100.0,
+                            height: 80,
+                            width: 80.0,
                             decoration: BoxDecoration(
                                 image: DecorationImage(
                                     image:
@@ -417,8 +418,8 @@ backgroundColor: AppColors.backgroundColor
                     child: Column(
                       children: [
                         Container(
-                            height: 100,
-                            width: 100.0,
+                          height: 80,
+                            width: 80.0,
                             decoration: BoxDecoration(
                                 image: DecorationImage(
                                     image: AssetImage('assets/images/subject.png'),
@@ -438,8 +439,8 @@ backgroundColor: AppColors.backgroundColor
                     child: Column(
                       children: [
                         Container(
-                            height: 100,
-                            width: 100.0,
+                          height: 80,
+                            width: 80.0,
                             decoration: BoxDecoration(
                                 image: DecorationImage(
                                     image:
@@ -447,6 +448,28 @@ backgroundColor: AppColors.backgroundColor
                                     fit: BoxFit.cover),
                                 shape: BoxShape.circle)),
                         Text('الطلاب',
+                            style: TextStyle(fontWeight: FontWeight.bold))
+                      ],
+                    ),
+                  ),
+
+                  
+                    InkWell(
+                    onTap: () {
+                      Get.to(AddEvent());
+                    },
+                    child: Column(
+                      children: [
+                        Container(
+                            height: 80,
+                            width: 80.0,
+                            decoration: BoxDecoration(
+                                image: DecorationImage(
+                                    image: AssetImage(
+                                        'assets/images/result.png'),
+                                    fit: BoxFit.cover),
+                                shape: BoxShape.circle)),
+                        Text('النتيجة',
                             style: TextStyle(fontWeight: FontWeight.bold))
                       ],
                     ),
@@ -459,218 +482,6 @@ backgroundColor: AppColors.backgroundColor
       ),
     );
 
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Colors.green[900],
-        appBar: AppBar(
-          backgroundColor: Colors.green,
-          elevation: 0.0,
-          toolbarHeight: 80,
-          title: Text('AdminApp'),
-          centerTitle: true,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(20),
-            bottomRight: Radius.circular(20),
-          )),
-          foregroundColor: Colors.green,
-        ),
-        drawer: Container(
-          width: MediaQuery.of(context).size.width / 2,
-          child: Drawer(
-            child: ListView(
-              // Important: Remove any padding from the ListView.
-
-              padding: EdgeInsets.zero,
-
-              children: <Widget>[
-                DrawerHeader(
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        CircleAvatar(
-                          backgroundColor: Colors.white,
-                          child: Container(
-                            decoration: BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(50))),
-                            child: Image.asset(
-                              'assets/images/user.jpg',
-                              width: 50,
-                              height: 50,
-                            ),
-                          ),
-                        ),
-                        Text(main_provider.getAdmin().name)
-                      ],
-                    ),
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.green,
-                  ),
-                ),
-                ListTile(
-                  leading: Icon(Icons.account_box),
-                  title: Text('الملف الشخصي'),
-                  onTap: () {
-                    // Update the state of the app.
-
-                    // ...
-
-                    Get.to(MyPrpfole(main_provider.getAdmin()));
-                  },
-                ),
-                SizedBox(
-                  height: 10.0,
-                ),
-                ListTile(
-                  leading: Icon(Icons.web),
-                  title: Text('موقع الجامعة'),
-                  onTap: () {
-                    // Update the state of the app.
-
-                    // ...
-
-                    Get.to(WebSite());
-
-                    //    Navigator.pop(context);
-                  },
-                ),
-                SizedBox(
-                  height: 10.0,
-                ),
-                ListTile(
-                  leading: Icon(Icons.app_settings_alt),
-                  title: Text('عن التطبيق'),
-                  onTap: () {
-                    // Update the state of the app.
-
-                    // ...
-
-                    Navigator.pop(context);
-                  },
-                ),
-                SizedBox(
-                  height: 10.0,
-                ),
-                ListTile(
-                  leading: Icon(Icons.logout),
-                  title: Text('تسجيل خروج '),
-                  onTap: () {
-                    Get.defaultDialog(
-                        title: 'تسجيل خروج',
-                        content: Text('هل تود ان تسجل خروج من هذا التطبيق؟'),
-                        actions: [
-                          RaisedButton(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.horizontal(
-                                      left: Radius.circular(20),
-                                      right: Radius.circular(20))),
-                              onPressed: () async {
-                                await getStorage.write('isLogged', false);
-                                Get.to(WelcomeScreen());
-                              },
-                              child: Text('نعم')),
-                          RaisedButton(
-                              color: Colors.red,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.horizontal(
-                                      left: Radius.circular(20),
-                                      right: Radius.circular(20))),
-                              onPressed: () {
-                                Get.back();
-                              },
-                              child: Text('لا')),
-                        ]);
-                  },
-                ),
-              ],
-            ),
-          ),
-        ),
-        body: Container(
-          padding: EdgeInsets.all(8.0),
-          clipBehavior: Clip.hardEdge,
-          height: double.infinity,
-          decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: AssetImage('assets/images/background.jpg'),
-                  fit: BoxFit.cover)),
-          child: ListView(children: [
-            Container(
-              height: 150,
-              child: CarouselSlider(
-                options: CarouselOptions(
-                  autoPlay: true,
-                  autoPlayInterval: Duration(seconds: 3),
-                ),
-                items: [1, 2, 3, 4, 5].map((i) {
-                  return Builder(
-                    builder: (BuildContext context) {
-                      return Container(
-                          width: MediaQuery.of(context).size.width,
-                          margin: EdgeInsets.symmetric(horizontal: 5.0),
-                          decoration: BoxDecoration(color: Colors.amber),
-                          child: Text(
-                            'text $i',
-                            style: TextStyle(fontSize: 16.0),
-                          ));
-                    },
-                  );
-                }).toList(),
-              ),
-            ),
-            SizedBox(height: 10),
-            Container(
-              height: MediaQuery.of(context).size.height - (150 + 80),
-              decoration: BoxDecoration(
-                  color: Colors.green[200],
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(20),
-                    topRight: Radius.circular(20),
-                  )),
-              child: GridView.count(
-                crossAxisCount: 2,
-                children: [
-                  FlatButton.icon(
-                      onPressed: () {
-                        Get.to(Departments());
-                      },
-                      icon: Icon(Icons.settings),
-                      label: Text('الأقسام')),
-                  FlatButton.icon(
-                      onPressed: () {
-                        Get.to(Teachers());
-                      },
-                      icon: Icon(Icons.wifi),
-                      label: Text('الأساتذة')),
-                  FlatButton.icon(
-                      onPressed: () {
-                        Get.to(Events());
-                      },
-                      icon: Icon(Icons.settings),
-                      label: Text('الاخبار'))
-
-                  //   FlatButton.icon(
-
-                  //                       onPressed: () {
-
-                  // // Get.to(Subjects());
-
-                  //                       },
-
-                  //                       icon: Icon(Icons.settings),
-
-                  //                       label: Text('المواد'))
-
-                  ,
-                ],
-              ),
-            ),
-          ]),
-        ),
-      ),
-    );
+   
   }
 }

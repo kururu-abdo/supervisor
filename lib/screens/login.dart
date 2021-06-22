@@ -46,11 +46,14 @@ reverse: true,
                SizedBox(height: 50.0,),
                Center(
          
-                 child: Icon(
-                   Icons.security_outlined ,
-                   color: AppColors.secondaryColor,
-                   size: 150,
-                 ),
+                 child: 
+                 Image.asset("assets/images/ic_login.png")
+                 
+                //  Icon(
+                //    Icons.security_outlined ,
+                //    color: AppColors.secondaryColor,
+                //    size: 150,
+                //  ),
                ) ,
                // Container(
                //     height: MediaQuery.of(context).size.height / 3,

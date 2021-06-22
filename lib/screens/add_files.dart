@@ -419,7 +419,7 @@ LecureFiles.remove(e);
 
                     'files': FilesTouploads, // Stokes and Sons
 
-                    'dept': supervisor.dept?.toJson() ?? null,
+                    'dept': supervisor.dept?.toJson(),
 
                     'level': widget.level?.toJson() ?? null
                   });

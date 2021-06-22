@@ -10,6 +10,8 @@ import 'package:app3/util/app_colors.dart';
 import 'package:app3/util/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:load/load.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 import 'package:uuid/uuid_util.dart';
@@ -221,8 +223,17 @@ var formKey =  GlobalKey<FormState>();
                         height: 20.0,
                       ),
        OutlinedButton.icon(onPressed: ()async{
+
        if (formKey.currentState.validate()) {
-         
+
+
+
+
+
+
+
+
+         var future =  await  showLoadingDialog();
 
 var timetableObject  ={
 
@@ -239,9 +250,35 @@ var timetableObject  ={
 
 };
 table.add(timetableObject)
-.then((value) => print("time table  Added"))
-                                  .catchError((error) =>
-                                      print("Failed to add user: $error"));
+.then((value) {
+
+
+  future.dismiss();
+  
+Get.defaultDialog(title: 'SUCCCESS' ,  content: Text('تمت الاضافة بنجاح') ,   actions: [TextButton(onPressed: (){
+  Get.back();
+}, child: Text("ok"))]);
+
+
+})
+                                  .catchError((error) {
+                                      future.dismiss();
+
+                                    Get.defaultDialog(
+                                    title: 'FAILED',
+                                    content: Text("حاول مرة اخرى"),
+                                    actions: [
+                                      TextButton(
+                                          onPressed: () {
+                                            Get.back();
+                                          },
+                                          child: Text("ok"))
+                                    ]);
+                                  
+                                  }
+                                    
+                                      
+                                      );
 
 
        }

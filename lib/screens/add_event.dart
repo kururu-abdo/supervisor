@@ -707,102 +707,23 @@ class _AddEventState extends State<AddEvent> {
                           height: 10,
                         ),
 
-                        // Container(
-
-                        //   decoration: BoxDecoration(
-
-                        //     borderRadius: BorderRadius.circular(10.0),
-
-                        //     color: Colors.grey[300],
-
-                        //   ),
-
-                        //   child: Padding(
-
-                        //       padding: const EdgeInsets.symmetric(horizontal: 10.0),
-
-                        //       child: Row(children: [
-
-                        //         Text('التخصص',
-
-                        //             style: TextStyle(color: Colors.black)),
-
-                        //         Container(),
-
-                        //         new DropdownButton<Department>(
-
-                        //           value: dept,
-
-                        //           items: depts.map((dept) {
-
-                        //             return DropdownMenuItem<Department>(
-
-                        //               value: dept,
-
-                        //               child: Text(dept.name,
-
-                        //                   style: TextStyle(color: Colors.black)),
-
-                        //             );
-
-                        //           }).toList(),
-
-                        //           onChanged: (newValue) {
-
-                        //             setState(() {
-
-                        //               dept = newValue;
-
-                        //             });
-
-                        //           },
-
-                        //         )
-
-                        //       ])),
-
-                        // ),
-
-                        // Row(children: [
-                        //   Text('اضافة ملفات'),
-
-                        //   IconButton(
-                        //     icon: Icon(Icons.file_copy),
-                        //     onPressed: () async {
-                        //       _pickDocument();
-                        //     },
-                        //   ),
-
-                        //   //LecureFiles
-
-                        //   Text('ملفات  ${LecureFiles.length}')
-                        // ]),
-
-                        ///TODO:gridview for files
-                        // Container(
-                        //   height: 200,
-                        //   child: GridView.count(crossAxisCount: 3 ,
-
-                        //   children: [],
-
-                        //   ),
-                        // ),
-
                         MaterialButton(
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.horizontal(
                                     left: Radius.circular(20),
                                     right: Radius.circular(20))),
-
-                                    color: AppColors.PrimaryColor,
+                            color: AppColors.PrimaryColor,
                             minWidth: double.infinity,
                             onPressed: () async {
-                          if (_formKey.currentState.validate()) {
-                              Get.to(AddFiles(titleController.text,
+                              if (_formKey.currentState.validate()) {
+                                Get.to(AddFiles(titleController.text,
                                     bodyController.text, level));
-                          }
+                              }
                             },
-                            child: Text('متابعة ' ,   style: TextStyle(fontWeight: FontWeight.bold),))
+                            child: Text(
+                              'متابعة ',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ))
 
                         // Add TextFormFields and ElevatedButton here.
                       ])),
@@ -811,8 +732,6 @@ class _AddEventState extends State<AddEvent> {
             ),
           )),
     );
-
-  
   }
 
   _pickDocument() async {
@@ -894,7 +813,7 @@ class _AddEventState extends State<AddEvent> {
     //   debugPrint(level.name);
 //https://gcm-http.googleapis.com/gcm/send
 //https://fcm.googleapis.com/fcm/send
-   if (data['level'] != null) {
+    if (data['level'] != null) {
       debugPrint('level is not null');
       var response = await http.post(
         'https://fcm.googleapis.com/fcm/send',
@@ -920,7 +839,7 @@ class _AddEventState extends State<AddEvent> {
           },
         ),
       );
-    }else {
+    } else {
       debugPrint('ALL');
       var response = await http.post(
         'https://fcm.googleapis.com/fcm/send',

@@ -4,6 +4,7 @@ import 'package:app3/model/models/semester.dart';
 import 'package:app3/model/models/teacher.dart';
 import 'package:app3/screens/add_teacher.dart';
 import 'package:app3/screens/edit_teacher.dart';
+import 'package:app3/screens/teacher_profile.dart';
 import 'package:app3/util/app_colors.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -93,7 +94,9 @@ class _TeachersState extends State<Teachers> {
                         margin: new EdgeInsets.symmetric(
                             horizontal: 10.0, vertical: 6.0),
                         child: ListTile(
-                          onTap: () {},
+                          onTap: () {
+                            Get.to(TeacherProfile(teacher));
+                          },
                           contentPadding: EdgeInsets.symmetric(
                               horizontal: 20.0, vertical: 10.0),
                           title: Text(
