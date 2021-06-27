@@ -27,7 +27,9 @@ static const Color primaryVariantColor2 = Color.fromARGB(255, 187,134,252);
  static const Color secondaryVariantColor = Color.fromARGB(255, 1, 135, 134);
  static const Color primaryVariantColor = Color.fromARGB(255, 55, 0, 179);
 
-
+static const Color greenColor =  Color.fromARGB(255, 51, 156, 45);
+  static const Color  whiteColor =  Colors.white;
+  static const Color  blackColor =  Color(0xFF191B1C);
 
   /// Slightly lighter version of [backgroundColor].
   static const Color appBarColor = Color(0xFF191B1C);

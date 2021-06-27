@@ -142,7 +142,7 @@ reverse: true,
                ),
                child: Text('تسجيل الدخول' ,  style:TextStyle(color: AppColors.onSecondary)),
                            minWidth: 250,
-                                                       color: AppColors.secondaryColor, onPressed: () async {
+                                                       color: Color.fromARGB(255, 51, 156, 45), onPressed: () async {
               if (await service_provider.checkInternet()) {
                               await main_provider.login(
                                   phoneController.text, passwordController.text);

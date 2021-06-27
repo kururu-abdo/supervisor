@@ -33,7 +33,9 @@ main() async {
   await GetStorage.init();
   await Firebase.initializeApp();
   await FlutterDownloader.initialize();
-  runApp(LoadingProvider(
+  runApp(
+
+      LoadingProvider(
       themeData: LoadingThemeData(
         loadingBackgroundColor: Colors.white,
         backgroundColor: Colors.black54,
@@ -74,16 +76,26 @@ class MyApp extends StatelessWidget {
              Locale('en', 'US'),
           Locale('ar', ''),
         ],
-        theme:   ThemeData(
-          primaryColor: AppColors.PrimaryColor ,
-          backgroundColor: AppColors.backgroundColor ,  
-          scaffoldBackgroundColor: AppColors.backgroundColor ,
+        theme:
+              ThemeData.from(colorScheme: ColorScheme.light(
+      primary: Colors.white ,
+                secondary: Colors.green ,
+                onPrimary: Colors.black ,
+                onSecondary: Colors.white ,
 
-          secondaryHeaderColor: AppColors.secondaryColor ,
-          colorScheme: ColorScheme(primary: AppColors.PrimaryColor, primaryVariant: AppColors.primaryVariantColor, secondary: AppColors.secondaryColor, secondaryVariant: AppColors.secondaryVariantColor , surface: AppColors.surfaceColor, background: AppColors.backgroundColor ,error: AppColors.errorColor, onPrimary: AppColors.onPrimary , onSecondary: AppColors.onSecondary, onSurface: AppColors.onPrimary, onBackground: AppColors.onPrimary, onError: AppColors.onBackground, brightness: Brightness.light)
-          
 
-        ) ,
+              )) ,
+        //
+        // ThemeData(
+        //   primaryColor: AppColors.PrimaryColor ,
+        //   backgroundColor: AppColors.backgroundColor ,
+        //   scaffoldBackgroundColor: AppColors.backgroundColor ,
+        //
+        //   secondaryHeaderColor: AppColors.secondaryColor ,
+        //   colorScheme: ColorScheme(primary: AppColors.PrimaryColor, primaryVariant: AppColors.primaryVariantColor, secondary: AppColors.secondaryColor, secondaryVariant: AppColors.secondaryVariantColor , surface: AppColors.surfaceColor, background: AppColors.backgroundColor ,error: AppColors.errorColor, onPrimary: AppColors.onPrimary , onSecondary: AppColors.onSecondary, onSurface: AppColors.onPrimary, onBackground: AppColors.onPrimary, onError: AppColors.onBackground, brightness: Brightness.light)
+        //
+        //
+        // ) ,
       // theme: ThemeData(brightness: Brightness.light, primarySwatch: AppColors.PrimaryColor) ,
           // This makes the visual density adapt to the platform that you run
           // the app on. For desktop platforms, the controls will be smaller and
