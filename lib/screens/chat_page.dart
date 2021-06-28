@@ -51,54 +51,66 @@ class _MyHomePageState extends State<ChatPage> {
             centerTitle: true,
             title: Text(widget.user.name),
           ),
-          body: StreamBuilder<QuerySnapshot>(
-              stream: FirebaseFirestore.instance
-                  .collection('messages')
-                  .where('chat_id',
-                      isEqualTo: widget.me.name + widget.user.name)
-                  .orderBy('time', descending: false)
-                  .snapshots(),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  return Center(
-                    child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                        Theme.of(context).primaryColor,
-                      ),
-                    ),
-                  );
-                } else {
-                  return ListView.builder(
-                    controller: _scrollController,
-                    itemCount: snapshot.data.docs.length,
-                    scrollDirection: Axis.vertical,
-                    itemBuilder: (BuildContext context, int index) {
-var data =  snapshot.data.docs[index]
-                                      .data()   as Map<String , dynamic>;
+          body: 
+          Container(
 
-                      
-                      return Align(
-                          alignment: User.fromJson(data['receiver']) ==
-                                  User.fromJson(widget.me.toJson())
-                              ? Alignment.topRight
-                              : Alignment.topLeft,
-                          child: Container(
-                            decoration: BoxDecoration(
-                                color: User.fromJson(data['receiver']) ==
-                                        User.fromJson(widget.me.toJson())
-                                    ? Colors.grey
-                                    : Colors.purple,
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20))),
-                            margin: EdgeInsets.all(10.0),
-                            padding: EdgeInsets.all(10.0),
-                            child: Text(
-                                data['message']),
-                          ));
-                    },
-                  );
-                }
-              }),
+
+             constraints: BoxConstraints.expand(),
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(
+          'assets/images/chat_page.jpg',
+        ),
+              fit: BoxFit.cover,),),
+            child: StreamBuilder<QuerySnapshot>(
+                stream: FirebaseFirestore.instance
+                    .collection('messages')
+                    .where('chat_id',
+                        isEqualTo: widget.me.name + widget.user.name)
+                    .orderBy('time', descending: false)
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return Center(
+                      child: CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          Theme.of(context).primaryColor,
+                        ),
+                      ),
+                    );
+                  } else {
+                    return ListView.builder(
+                      controller: _scrollController,
+                      itemCount: snapshot.data.docs.length,
+                      scrollDirection: Axis.vertical,
+                      itemBuilder: (BuildContext context, int index) {
+          var data =  snapshot.data.docs[index]
+                                        .data()   as Map<String , dynamic>;
+          
+                        
+                        return Align(
+                            alignment: User.fromJson(data['receiver']) ==
+                                    User.fromJson(widget.me.toJson())
+                                ? Alignment.topRight
+                                : Alignment.topLeft,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  color: User.fromJson(data['receiver']) ==
+                                          User.fromJson(widget.me.toJson())
+                                      ? Colors.grey
+                                      : Colors.purple,
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(20))),
+                              margin: EdgeInsets.all(10.0),
+                              padding: EdgeInsets.all(10.0),
+                              child: Text(
+                                  data['message']),
+                            ));
+                      },
+                    );
+                  }
+                }),
+          ),
           bottomNavigationBar: Padding(
             padding: MediaQuery.of(context).viewInsets,
             child: TextField(
