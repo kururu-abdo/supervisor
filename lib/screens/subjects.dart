@@ -25,9 +25,7 @@ class _SubjectsState extends State<Subjects> {
   Widget build(BuildContext context) {
     var main_provider = Provider.of<MainProvider>(context);
     return Scaffold(
-        backgroundColor: AppColors.backgroundColor,
         appBar: AppBar(
-          backgroundColor: AppColors.PrimaryColor,
           elevation: 0.0,
           
           title: Text('المواد' ,  style: TextStyle(color: AppColors.onPrimary),),
@@ -94,9 +92,12 @@ class _SubjectsState extends State<Subjects> {
                                       fontWeight: FontWeight.bold),
                                 ),
                             ],),
-                            trailing: IconButton(icon: Icon(Icons.edit ,  color: AppColors.PrimaryColor,), onPressed: (){
+                            trailing: IconButton(icon: Icon(Icons.edit ,  color: AppColors.greenColor), onPressed: (){
  
-                              Get.to(EditSubject(subject));
+                              Get.to(Directionality(
+                                
+                                textDirection :TextDirection.rtl ,
+                                child: Material (child: EditSubject(subject))));
                             }),
                           ),
                         ))
@@ -106,7 +107,6 @@ class _SubjectsState extends State<Subjects> {
           ),
         ),
         floatingActionButton: FloatingActionButton(
-          backgroundColor: AppColors.secondaryColor,
           onPressed: () {
             Navigator.of(context).push(HeroDialogRoute(builder: (_) {
               return AddSubject(widget.supervisor);

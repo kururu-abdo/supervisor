@@ -55,20 +55,31 @@ dependencies:
   flutter_swipe_action_cell: ^2.0.0
   url_launcher: ^5.7.10
   intl:
+  flutter_file_preview:
+    git:
+        url: git://github.com/aliyoge/flutter_file_preview.git
+
+
+  sizer: ^1.1.8
   path_provider: ^1.6.22
   carousel_slider: ^3.0.0
   flutter_downloader: ^1.5.2
 dev_dependencies:
+  flutter_native_splash: ^0.1.9
+    
   flutter_test:
     sdk: flutter
-  flutter_launcher_icons: "^0.8.0"
+  flutter_launcher_icons: ^0.7.4
 flutter_icons:
-  android: true
-  ios: true
-  image_path: "assets/images/logo.jpg"  
+  android: "launcher_icon" 
+  ios: false
+  image_path: "assets/images/karari.png"  
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
-
+flutter_native_splash:
+  image: assets/images/karari.png
+  color: "ffffff"
+  fullscreen: true
 # The following section is specific to Flutter.
 flutter:
 

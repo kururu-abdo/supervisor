@@ -24,9 +24,7 @@ class _LevelsState extends State<LevelScreen> {
   Widget build(BuildContext context) {
     var main_provider = Provider.of<MainProvider>(context);
     return Scaffold(
-      backgroundColor: AppColors.backgroundColor,
       appBar: AppBar(
-        backgroundColor: AppColors.primaryVariantColor,
         elevation: 0.0,
 
         title: Text(

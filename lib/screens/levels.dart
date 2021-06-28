@@ -19,11 +19,9 @@ class _LevelsState extends State<Levels> {
   Widget build(BuildContext context) {
     var main_provider = Provider.of<MainProvider>(context);
     return Scaffold(
-      backgroundColor: AppColors.backgroundColor ,
       appBar: AppBar(
-        backgroundColor: AppColors.primaryVariantColor,
         elevation: 0.0,
-        
+        backgroundColor: AppColors.greenColor , 
         title: Text('المستويات',   style: TextStyle(color:AppColors.onPrimary),),
         centerTitle: true,
         // shape: RoundedRectangleBorder(

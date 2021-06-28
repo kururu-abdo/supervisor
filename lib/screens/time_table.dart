@@ -114,7 +114,7 @@ CupertinoButton(
 
 
                                       }, icon: Icon(Icons.delete ,
-                                        color: AppColors.PrimaryColor,
+                                        color: Colors.red,
                                       )) ,
 //  leading: Text(snapshot.data[index].data()['hall']),
 

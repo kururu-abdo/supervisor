@@ -32,11 +32,12 @@ class _MyPrpfoleState extends State<MyPrpfole> {
         .collection('supervisor')
         .where('id', isEqualTo: widget.admin.id);
     return Scaffold(
-      backgroundColor: AppColors.backgroundColor,
+//backgroundColor: AppColors.backgroundColor,
       appBar: AppBar(
-        backgroundColor: AppColors.PrimaryColor,
+//backgroundColor: AppColors.PrimaryColor,
         title: Text('الملف الشخصي'),
         centerTitle: true,
+        elevation: 0.0,
       ),
       body: FutureBuilder<QuerySnapshot>(
         future: admin.get(),
@@ -59,11 +60,13 @@ class _MyPrpfoleState extends State<MyPrpfole> {
                               begin: Alignment.topCenter,
                               end: Alignment.bottomCenter,
                               colors: [
-                            AppColors.PrimaryColor,
-                            AppColors.primaryVariantColor2
-                          ])),
+                            Colors.green,
+Colors.greenAccent                          ])),
                       child: Container(
                         width: double.infinity,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(15.0))
+                        ),
                         height: 350.0,
                         child: Center(
                           child: Column(

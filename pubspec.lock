@@ -204,6 +204,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.15.0"
+  color:
+    dependency: transitive
+    description:
+      name: color
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.1.1"
   convert:
     dependency: transitive
     description:
@@ -342,6 +349,15 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.6.0"
+  flutter_file_preview:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: HEAD
+      resolved-ref: "04653dded44a5572410a2b2a7cbc2ff579fee7a9"
+      url: "git://github.com/aliyoge/flutter_file_preview.git"
+    source: git
+    version: "0.0.1"
   flutter_filereader:
     dependency: "direct main"
     description:
@@ -355,7 +371,14 @@ packages:
       name: flutter_launcher_icons
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.8.1"
+    version: "0.7.5"
+  flutter_native_splash:
+    dependency: "direct dev"
+    description:
+      name: flutter_native_splash
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.9"
   flutter_pdfview:
     dependency: "direct main"
     description:
@@ -723,6 +746,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.2.4+1"
+  sizer:
+    dependency: "direct main"
+    description:
+      name: sizer
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.8"
   sky_engine:
     dependency: transitive
     description: flutter

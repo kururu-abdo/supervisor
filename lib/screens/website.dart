@@ -30,13 +30,8 @@ class _WebState extends State<WebSite> {
       child: SafeArea(
           child: Scaffold(
         appBar: AppBar(
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(20),
-            bottomRight: Radius.circular(20),
-          )),
+         
           centerTitle: true,
-          backgroundColor: AppColors.appBarColor,
           title: Text('موقع الجامعة'),
         ),
         body: Container(

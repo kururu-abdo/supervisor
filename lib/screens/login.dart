@@ -47,7 +47,7 @@ reverse: true,
                Center(
          
                  child: 
-                 Image.asset("assets/images/ic_login.png")
+                 Image.asset("assets/images/ic_login_green.png")
                  
                 //  Icon(
                 //    Icons.security_outlined ,
@@ -140,7 +140,7 @@ reverse: true,
                shape: RoundedRectangleBorder(
                  borderRadius: BorderRadius.all(Radius.circular(10.0))
                ),
-               child: Text('تسجيل الدخول' ,  style:TextStyle(color: AppColors.onSecondary)),
+               child: Text('تسجيل الدخول' ,  style:TextStyle(color: AppColors.whiteColor)),
                            minWidth: 250,
                                                        color: Color.fromARGB(255, 51, 156, 45), onPressed: () async {
               if (await service_provider.checkInternet()) {

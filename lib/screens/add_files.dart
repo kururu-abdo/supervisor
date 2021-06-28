@@ -374,7 +374,7 @@ LecureFiles.remove(e);
          
                           MaterialButton(
 
-                            color: AppColors.PrimaryColor,
+                            color: AppColors.greenColor,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.horizontal(
                       left: Radius.circular(20), right: Radius.circular(20))),
@@ -384,9 +384,24 @@ LecureFiles.remove(e);
 
                 if (await service_provider.checkInternet()) {
 
-    var future = await showLoadingDialog(
-      tapDismiss:false
-    );
+    var future = await showCustomLoadingWidget(
+                      Material (
+                        child: Center(
+                          child: Container(
+                            width: double.infinity,
+                            height: 100, 
+                            child:  Center (
+                              child:  Row(children: [
+                                Text('انتظر من فضلك')
+                              ],),
+                            )
+                          ),
+                        ),
+                      ) ,
+                      
+                      tapDismiss :  false
+                      
+                      ); // custom dialog
 
 
                   await UploadFilesToBackendless(); //await here
@@ -457,7 +472,11 @@ LecureFiles.remove(e);
                       
                 }
               },
-              child: Text('نشر الخبر أو الإعلان '    ,  style: TextStyle(fontSize: 22 ,  fontWeight: FontWeight.bold),))
+              child: Text('نشر الخبر أو الإعلان '    ,  style: TextStyle(
+                color: Colors.white,
+                
+                
+                fontSize: 22 ,  fontWeight: FontWeight.bold),))
          
          
          ]

@@ -7,6 +7,7 @@ import 'package:app3/logic/user_provider.dart';
 import 'package:app3/model/models/supervisor.dart';
 import 'package:app3/screens/add_event.dart';
 import 'package:app3/screens/departments.dart';
+import 'package:sizer/sizer.dart';
 import 'package:app3/screens/events.dart';
 import 'package:app3/screens/profile_page.dart';
 import 'package:app3/screens/semesters.dart';
@@ -27,6 +28,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:load/load.dart';
 import 'package:provider/provider.dart';
+import 'package:sizer/sizer_util.dart';
 
 main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,37 +37,26 @@ main() async {
   await FlutterDownloader.initialize();
   runApp(
 
-      LoadingProvider(
-      themeData: LoadingThemeData(
-        loadingBackgroundColor: Colors.white,
-        backgroundColor: Colors.black54,
-      ),
-      loadingWidgetBuilder: (ctx, data) {
-        return Center(
-          child: SizedBox(
-            width: 30,
-            height: 30,
-            child: Container(
-              child: CupertinoActivityIndicator(),
-              color: Colors.blue,
-            ),
-          ),
-        );
-      },
-      child: MultiProvider(providers: [
+ MultiProvider(providers: [
         Provider<ServiceProvider>(create: (_) => ServiceProvider()),
         Provider<UserProvider>(create: (_) => UserProvider()),
        
         Provider<EventProvider>(create: (_) => EventProvider()),
         ChangeNotifierProvider(create: (_)=> MainProvider())
-      ], child: MyApp())));
+      ], child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
   static final navigatorKey = GlobalKey<NavigatorState>();
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
+    return LayoutBuilder(                           //return LayoutBuilder
+      builder: (context, constraints) {
+        return OrientationBuilder(                  //return OrientationBuilder
+          builder: (context, orientation) {
+            //initialize SizerUtil()
+            SizerUtil().init(constraints, orientation);  //initialize SizerUtil
+            return GetMaterialApp(
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
       // locale: new Locale('ar'),
@@ -78,12 +69,13 @@ class MyApp extends StatelessWidget {
         ],
         theme:
               ThemeData.from(colorScheme: ColorScheme.light(
-      primary: Colors.white ,
-                secondary: Colors.green ,
+      primary: Colors.green ,
+                secondary: Colors.green[100] ,
                 onPrimary: Colors.black ,
-                onSecondary: Colors.white ,
+                onSecondary: Colors.black ,
 
-
+surface: Colors.white ,
+onSurface: Colors.black
               )) ,
         //
         // ThemeData(
@@ -102,7 +94,38 @@ class MyApp extends StatelessWidget {
           // closer together (more dense) than on mobile platforms.
 
       //     ),
-      home: WelcomeScreen()
+      builder: (context, widget){
+
+      return 
+        LoadingProvider(
+      themeData: LoadingThemeData(
+        loadingBackgroundColor: Colors.white,
+        backgroundColor: Colors.black54,
+      ),
+      loadingWidgetBuilder: (ctx, data) {
+        return Center(
+          child: SizedBox(
+            width: 30,
+            height: 30,
+            child: Container(
+              child: CupertinoActivityIndicator(),
+              color: Colors.blue,
+            ),
+          ),
+        );
+      },
+      child :widget
+      
+      
+      );
+      },
+    home: WelcomeScreen()
+      
+      
+      );
+          },
+        );
+      },
     );
   }
 }
@@ -143,7 +166,7 @@ getSuperVisor(){
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: AppColors.backgroundColor,
+        backgroundColor: AppColors.greenColor,
         appBar: AppBar(
           elevation: 0.0,
           // toolbarHeight: 80,
@@ -156,7 +179,7 @@ getSuperVisor(){
           
           // ))
           
-          backgroundColor:AppColors.PrimaryColor,
+         
         ),
         drawer: Container(
           width: MediaQuery.of(context).size.width / 2,
@@ -192,7 +215,7 @@ getSuperVisor(){
                     ),
                   ),
                   decoration:
-                      BoxDecoration(color: AppColors.primaryVariantColor),
+                      BoxDecoration(color: AppColors.greenColor),
                 ),
                 ListTile(
                   leading: Icon(Icons.account_box,
@@ -215,17 +238,9 @@ getSuperVisor(){
                   title: Text('موقع الجامعة'),
                   onTap: () {
                     // Update the state of the app.
-Get.bottomSheet(
-  
-  Container(height: MediaQuery.of(context).size.height/2,
-child: Text('lkdlkf'),
-) ,
-backgroundColor: AppColors.backgroundColor
+// ...
 
-);
-                    // ...
-
-              //      Get.to(WebSite());
+                    Get.to(WebSite());
 
                     //    Navigator.pop(context);
                   },
@@ -323,23 +338,36 @@ backgroundColor: AppColors.backgroundColor
             Expanded(
               child: GridView.count(
                 crossAxisCount: 3,
+                mainAxisSpacing: 10,
+                crossAxisSpacing: 10.0,
+                physics: BouncingScrollPhysics(),
                 children: [
                   InkWell(
                     onTap: () {
                       Get.to(MyPrpfole(main_provider.getAdmin()));
                     },
                     child: Container(
+                      padding: EdgeInsets.all(5.0),
+                      decoration: BoxDecoration(
+                        color: AppColors.whiteColor  ,
+  borderRadius :   BorderRadius.all(Radius.circular(20))
+                      ),
                       child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Container(
-                              height: 80,
-                              width: 80.0,
+                              height: 60.0.sp,
+                              width: 60.0.sp,
+                              margin: EdgeInsets.only(left: 5.0  ,  right: 5.0),
                               decoration: BoxDecoration(
                                   image: DecorationImage(
                                       image: AssetImage(
-                                          'assets/images/profile.png')),
+                                          'assets/images/profile.png' ,
+                                           
+                                          
+                                          ) ,  fit:BoxFit.contain ) ,
                                   shape: BoxShape.circle)),
-                          Text('الملف الشخصي' ,  style:TextStyle(fontWeight: FontWeight.bold))
+                          Expanded(child: Text('الملف الشخصي' ,  style:TextStyle(fontWeight: FontWeight.w600)))
                         ],
                       ),
                     ),
@@ -348,76 +376,116 @@ backgroundColor: AppColors.backgroundColor
                     onTap: () {
                       Get.to(Events());
                     },
-                    child: Column(
-                      children: [
-                        Container(
-                           height: 80,
-                            width: 80.0,
-                            decoration: BoxDecoration(
-                                image: DecorationImage(
-                                    image:
-                                        AssetImage('assets/images/news.png')),
-                                shape: BoxShape.circle)),
-                        Text('الأخبار',
-                            style: TextStyle(fontWeight: FontWeight.bold))
-                      ],
+                    child: Container(
+                       padding: EdgeInsets.all(5.0),
+                      decoration: BoxDecoration(
+                          color: AppColors.whiteColor,
+                          borderRadius: BorderRadius.all(Radius.circular(20))),
+                      child: Column(
+                        children: [
+                          Container(
+                             height: 60.0.sp,
+                              width: 60.0.sp,
+                              decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                      image:
+                                          AssetImage('assets/images/news.png'),
+fit: BoxFit.contain
+                                          
+                                          
+                                          ),
+                                  shape: BoxShape.circle) ,    ),
+                          Text('الأخبار',
+                              style: TextStyle(fontWeight: FontWeight.w600))
+                        ],
+                      ),
                     ),
                   ),
                   InkWell(
                     onTap: () {
                       Get.to(WebSite());
                     },
-                    child: Column(
-                      children: [
-                        Container(
-                              height: 80,
-                            width: 80.0,
-                            decoration: BoxDecoration(
-                                image: DecorationImage(
-                                    image: AssetImage(
-                                        'assets/images/website.png')),
-                                shape: BoxShape.circle)),
-                        Text('صفحة الكلية',
-                            style: TextStyle(fontWeight: FontWeight.bold))
-                      ],
+                    child: Container(
+                       padding: EdgeInsets.all(5.0),
+                      decoration: BoxDecoration(
+                          color: AppColors.whiteColor,
+                          borderRadius: BorderRadius.all(Radius.circular(20))),
+                      child: Column(
+                        children: [
+                          Container(
+                                height: 60.0.sp,
+                              width: 60.0.sp,
+                              decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                      image: AssetImage(
+                                          'assets/images/website.png'),
+                                          fit:BoxFit.contain
+                                          
+                                          ),
+                                  shape: BoxShape.circle)),
+                          Text('صفحة الكلية',
+                              style: TextStyle(fontWeight: FontWeight.w600))
+                        ],
+                      ),
                     ),
                   ),
                   InkWell(
                     onTap: () {
                       Get.to(Teachers());
                     },
-                    child: Column(
-                      children: [
-                        Container(
-                             height: 80,
-                            width: 80.0,
-                            decoration: BoxDecoration(
-                                image: DecorationImage(
-                                    image: AssetImage(
-                                        'assets/images/teacher.png')),
-                                shape: BoxShape.circle)),
-                        Text('الأساتذة',
-                            style: TextStyle(fontWeight: FontWeight.bold))
-                      ],
+                    child: Container(
+                       padding: EdgeInsets.all(5.0),
+                      decoration: BoxDecoration(
+                          color: AppColors.whiteColor,
+                          borderRadius: BorderRadius.all(Radius.circular(20))),
+                      child: Column(
+                        children: [
+                          Container(
+                               height: 60.0.sp,
+                              width: 60.0.sp,
+                              decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                      image: AssetImage(
+                                          'assets/images/teacher.png') ,
+                                          
+                                          
+                                          fit: BoxFit.contain
+                                          
+                                          ),
+                                  shape: BoxShape.circle)),
+                          Text('الأساتذة',
+                              style: TextStyle(fontWeight: FontWeight.w600))
+                        ],
+                      ),
                     ),
                   ),
                   InkWell(
                     onTap: () {
                       Get.to(Semsters());
                     },
-                    child: Column(
-                      children: [
-                        Container(
-                            height: 80,
-                            width: 80.0,
-                            decoration: BoxDecoration(
-                                image: DecorationImage(
-                                    image:
-                                        AssetImage('assets/images/time.png') ,  fit:BoxFit.cover),
-                                shape: BoxShape.circle)),
-                        Text('الجدول',
-                            style: TextStyle(fontWeight: FontWeight.bold))
-                      ],
+                    child: Container(
+ padding: EdgeInsets.all(5.0),
+                      decoration: BoxDecoration(
+                          color: AppColors.whiteColor,
+                          borderRadius: BorderRadius.all(Radius.circular(20))),
+
+
+
+                      child: Column(
+                        children: [
+                          Container(
+                            
+                              height:   60.0.sp,
+                              width: 60.0.sp,
+                              decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                      image:
+                                          AssetImage('assets/images/time.png') ,  fit:BoxFit.contain),
+                                  shape: BoxShape.circle)),
+                          Text('الجدول',
+                              style: TextStyle(fontWeight: FontWeight.w600))
+                        ],
+                      ),
                     ),
                   ),
 
@@ -427,19 +495,25 @@ backgroundColor: AppColors.backgroundColor
                     onTap: () {
                       Get.to(Subjects(supervisor));
                     },
-                    child: Column(
-                      children: [
-                        Container(
-                          height: 80,
-                            width: 80.0,
-                            decoration: BoxDecoration(
-                                image: DecorationImage(
-                                    image: AssetImage('assets/images/subject.png'),
-                                    fit: BoxFit.cover),
-                                shape: BoxShape.circle)),
-                        Text('المواد',
-                            style: TextStyle(fontWeight: FontWeight.bold))
-                      ],
+                    child: Container(
+                       padding: EdgeInsets.all(5.0),
+                      decoration: BoxDecoration(
+                          color: AppColors.whiteColor,
+                          borderRadius: BorderRadius.all(Radius.circular(20))),
+                      child: Column(
+                        children: [
+                          Container(
+                            height: 60.0.sp,
+                              width: 60.0.sp,
+                              decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                      image: AssetImage('assets/images/subject.png'),
+                                      fit: BoxFit.contain),
+                                  shape: BoxShape.circle)),
+                          Text('المواد',
+                              style: TextStyle(fontWeight: FontWeight.w600))
+                        ],
+                      ),
                     ),
                   ),
 
@@ -448,20 +522,26 @@ backgroundColor: AppColors.backgroundColor
                     onTap: () {
                       Get.to(StudentsOptions());
                     },
-                    child: Column(
-                      children: [
-                        Container(
-                          height: 80,
-                            width: 80.0,
-                            decoration: BoxDecoration(
-                                image: DecorationImage(
-                                    image:
-                                        AssetImage('assets/images/students.png'),
-                                    fit: BoxFit.cover),
-                                shape: BoxShape.circle)),
-                        Text('الطلاب',
-                            style: TextStyle(fontWeight: FontWeight.bold))
-                      ],
+                    child: Container(
+                       padding: EdgeInsets.all(5.0),
+                      decoration: BoxDecoration(
+                          color: AppColors.whiteColor,
+                          borderRadius: BorderRadius.all(Radius.circular(20))),
+                      child: Column(
+                        children: [
+                          Container(
+                            height: 60.0.sp,
+                              width: 60.0.sp,
+                              decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                      image:
+                                          AssetImage('assets/images/students.png'),
+                                      fit: BoxFit.contain),
+                                  shape: BoxShape.circle)),
+                          Text('الطلاب',
+                              style: TextStyle(fontWeight: FontWeight.bold))
+                        ],
+                      ),
                     ),
                   ),
 
@@ -470,20 +550,26 @@ backgroundColor: AppColors.backgroundColor
                     onTap: () {
                       Get.to(AddEvent());
                     },
-                    child: Column(
-                      children: [
-                        Container(
-                            height: 80,
-                            width: 80.0,
-                            decoration: BoxDecoration(
-                                image: DecorationImage(
-                                    image: AssetImage(
-                                        'assets/images/result.png'),
-                                    fit: BoxFit.cover),
-                                shape: BoxShape.circle)),
-                        Text('النتيجة',
-                            style: TextStyle(fontWeight: FontWeight.bold))
-                      ],
+                    child: Container(
+                       padding: EdgeInsets.all(5.0),
+                      decoration: BoxDecoration(
+                          color: AppColors.whiteColor,
+                          borderRadius: BorderRadius.all(Radius.circular(20))),
+                      child: Column(
+                        children: [
+                          Container(
+                              height: 60.0.sp,
+                              width: 60.0.sp,
+                              decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                      image: AssetImage(
+                                          'assets/images/result.png'),
+                                      fit: BoxFit.contain),
+                                  shape: BoxShape.circle)),
+                          Text('النتيجة',
+                              style: TextStyle(fontWeight: FontWeight.bold))
+                        ],
+                      ),
                     ),
                   ),
                 ],

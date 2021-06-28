@@ -59,9 +59,8 @@ class _TeachersState extends State<Teachers> {
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      backgroundColor: AppColors.backgroundColor,
+      backgroundColor: AppColors.greenColor,
       appBar: AppBar(
-        backgroundColor: AppColors.PrimaryColor,
         elevation: 0.0,
         // toolbarHeight: 80,
         title: Text('الأساتذة'),
@@ -71,7 +70,6 @@ class _TeachersState extends State<Teachers> {
         //   bottomLeft: Radius.circular(20),
         //   bottomRight: Radius.circular(20),
         // )),
-        foregroundColor: AppColors.surfaceColor,
       ),
       body: Padding(
         padding: EdgeInsets.all(8.0),
@@ -112,9 +110,9 @@ class _TeachersState extends State<Teachers> {
                                 fontWeight: FontWeight.bold),
                           ),
                           trailing: IconButton(
-                              icon: Icon(Icons.edit ,  color:AppColors.PrimaryColor),
+                              icon: Icon(Icons.edit ,  color:AppColors.greenColor),
                               onPressed: () {
-                                Get.to(EditTeacher(teacher));
+                                Get.to(Directionality(textDirection: TextDirection.rtl,child: Material (child: EditTeacher(teacher))));
                               }),
                         ),
                       ))
@@ -125,7 +123,6 @@ class _TeachersState extends State<Teachers> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: AppColors.primaryVariantColor2,
         onPressed: () async {
           Get.to(AddTeacher());
         },

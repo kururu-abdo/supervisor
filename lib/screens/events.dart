@@ -121,8 +121,9 @@ await event_provider.deleteevent(new Event( event.data()['id'] ,
                                     
                                     ),
                             child: ListTile(
-                              onTap: () {
-                            Get.to(EventDetails(   event.data()));
+                              onTap: () { 
+                                
+                            Get.to(EventDetails(   event.data() ,  event.id));
                               },
                               contentPadding: EdgeInsets.symmetric(
                                   horizontal: 20.0, vertical: 10.0),

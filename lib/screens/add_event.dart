@@ -704,7 +704,7 @@ class _AddEventState extends State<AddEvent> {
                         ),
 
                         SizedBox(
-                          height: 10,
+                          height: 50,
                         ),
 
                         MaterialButton(
@@ -712,7 +712,7 @@ class _AddEventState extends State<AddEvent> {
                                 borderRadius: BorderRadius.horizontal(
                                     left: Radius.circular(20),
                                     right: Radius.circular(20))),
-                            color: AppColors.PrimaryColor,
+                            color: AppColors.greenColor,
                             minWidth: double.infinity,
                             onPressed: () async {
                               if (_formKey.currentState.validate()) {
@@ -722,7 +722,7 @@ class _AddEventState extends State<AddEvent> {
                             },
                             child: Text(
                               'متابعة ',
-                              style: TextStyle(fontWeight: FontWeight.bold),
+                              style: TextStyle(fontWeight: FontWeight.bold ,   color: Colors.white),
                             ))
 
                         // Add TextFormFields and ElevatedButton here.

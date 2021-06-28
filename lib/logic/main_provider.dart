@@ -424,6 +424,22 @@ if (data.docs.length>0) {
   }
 
 
+  Future<void> deleteEventFile(String file  ,  String doc) async {
+    debugPrint('removing...');
+var vals =[];
+vals.add(file);
+     await FirebaseFirestore.instance.collection('events')
+.doc(doc).update({"files":
+
+ FieldValue.arrayRemove(vals)});
+        
+        
+
+
+    
+
+  //  future.dismiss();
+  }
 
 
 
