@@ -5,6 +5,7 @@ import 'package:app3/model/models/level.dart';
 import 'package:app3/model/models/semester.dart';
 import 'package:app3/model/models/subject.dart';
 import 'package:app3/model/models/teacher.dart';
+import 'package:app3/util/app_colors.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -60,9 +61,15 @@ class _AddSubjectState extends State<EditTeacher> {
 
     var service_provider = Provider.of<ServiceProvider>(context);
 
-    return Center(
-      child: Container(
-        height: 400,
+    return  Scaffold(
+        backgroundColor: AppColors.greenColor,
+    
+    appBar: AppBar(title: Text("اضافة استاذ"), centerTitle: true,  elevation: 0.0,
+    backgroundColor: AppColors.greenColor,
+    ),
+        resizeToAvoidBottomInset :  false ,
+      body: Container(
+        height: double.infinity,
         child: Padding(
           padding: const EdgeInsets.all(30.0),
           child: Material(
@@ -78,7 +85,7 @@ class _AddSubjectState extends State<EditTeacher> {
                   children: [
                     TextFormField(
                       controller: nameController,
-
+    
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.all(8.0),
                         labelText: 'الأسم.... ',
@@ -96,6 +103,11 @@ class _AddSubjectState extends State<EditTeacher> {
                         return null;
                       },
                     ),
+
+
+                    SizedBox(height: 10,),
+
+
                     TextFormField(
                       controller: phoneController,
                       keyboardType: TextInputType.number,
@@ -116,9 +128,13 @@ class _AddSubjectState extends State<EditTeacher> {
                         return null;
                       },
                     ),
+                                        SizedBox(
+                      height: 10,
+                    ),
+
                     TextFormField(
                       controller: addressController,
-
+    
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.all(8.0),
                         labelText: 'العنوان.... ',
@@ -136,6 +152,10 @@ class _AddSubjectState extends State<EditTeacher> {
                         return null;
                       },
                     ),
+                                        SizedBox(
+                      height: 10,
+                    ),
+
                     Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10.0),
@@ -164,6 +184,10 @@ class _AddSubjectState extends State<EditTeacher> {
                             )
                           ])),
                     ),
+                                        SizedBox(
+                      height: 10,
+                    ),
+
                     Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10.0),
@@ -192,7 +216,12 @@ class _AddSubjectState extends State<EditTeacher> {
                             )
                           ])),
                     ),
+                                        SizedBox(
+                      height: 10,
+                    ),
+
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         RaisedButton(
                             color: Colors.red,
@@ -224,27 +253,27 @@ class _AddSubjectState extends State<EditTeacher> {
                                 //   };
                                 //   await main_provider.addTeacher(data);
                                 // }
-var teacher =  widget.teacher;
-
-
-teacher.name = nameController.text.length>0?nameController.text:  teacher.name;
-
-teacher.address =addressController.text.length>0 ?addressController.text:  teacher.address;
-
-teacher.degree =
+    var teacher =  widget.teacher;
+    
+    
+    teacher.name = nameController.text.length>0?nameController.text:  teacher.name;
+    
+    teacher.address =addressController.text.length>0 ?addressController.text:  teacher.address;
+    
+    teacher.degree =
                                    this.Degree ?? teacher.degree;
-teacher.semester = this.semester ?? teacher.semester;
-
-teacher.phone =
+    teacher.semester = this.semester ?? teacher.semester;
+    
+    teacher.phone =
                                     phoneController.text.length>0 ?phoneController.text:teacher.phone;
-
-
-await main_provider.updateTeacher(teacher);
-
-
-Get.back();
-
-
+    
+    
+    await main_provider.updateTeacher(teacher);
+    
+    
+    Get.back();
+    
+    
                               } else {
                                 Fluttertoast.showToast(
                                     msg: "تأكد من أتصالك بالانترنت ^_^",
@@ -266,6 +295,6 @@ Get.back();
           ),
         ),
       ),
-    );
+      );
   }
 }

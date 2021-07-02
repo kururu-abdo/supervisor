@@ -35,7 +35,7 @@ class EditEvent extends StatefulWidget {
 }
 
 class _NewLectureState extends State<EditEvent> {
-  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   String event_id;
   DocumentSnapshot event_data;
   @override

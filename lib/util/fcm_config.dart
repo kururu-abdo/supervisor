@@ -1,88 +1,153 @@
+import 'dart:convert';
+
+import 'package:app3/model/models/notification.dart';
 import 'package:app3/util/constants.dart';
+import 'package:app3/util/local_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
+
+import '../main.dart';
 
 
 class FCMConfig {
- static  FirebaseMessaging   _firebaseMessaging = new FirebaseMessaging();
 FCMConfig(){
 fcmConfig();
 
 
 }
 
+static fcmConfig() async {
+    debugPrint('config notfication');
 
-static fcmConfig() async{
-  debugPrint('config notfication');
-   firebaseMessaging.configure(
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
+     
+RemoteNotification notification = message.notification;
+  AndroidNotification android = message.notification.android;
+    if (notification != null && android != null) {
+  DBProvider.db.newNotification(LocalNotification(
+        title: notification.title,
+        object: json.encode(message.data),
+        body: notification.body,
+        time: DateTime.now().millisecondsSinceEpoch));
+    flutterLocalNotificationsPlugin.show(
+      notification?.hashCode,
+      notification.title,
+      notification.body,
+      NotificationDetails(
+         AndroidNotificationDetails(
+            'channel', 'channelName', 'channelDescription')
 
- onMessage: (Map<String, dynamic> message) async {
-         debugPrint('new message');
-        Get.defaultDialog(title: message['notification']['title']);
-        },
-      onLaunch: (Map<String, dynamic> message) async {
-          
-          switch (message['screen']) {
-          case 'lecture_details':
-     //       Get.to(LectureDisscusion(message['lecture']));
+        // android:
+        //  AndroidNotificationDetails(
+        //   channel.id,
+        //   channel.name,
+        //   channel.description,
+        //   // TODO add a proper drawable resource to android, for now using
+        //   //      one that already exists in example app.
+        //   icon: 'launch_background',
+        // ),
+         , null
+      ) ,  
+      
+      
+      );
 
-            break;
+    }
+    });
 
-          case 'event_details':
-       //     Get.to(EventDeitals(message['event']));
-            break;
-          default:
-        }
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      RemoteNotification notification = message.notification;
+      AndroidNotification android = message.notification.android;
 
+        if (notification != null && android != null) {
+  DBProvider.db.newNotification(LocalNotification(
+        title: notification.title,
+        object: json.encode(message.data),
+        body: notification.body,
+        time: DateTime.now().millisecondsSinceEpoch));
+    flutterLocalNotificationsPlugin.show(
+      notification?.hashCode,
+      notification.title,
+      notification.body,
+      NotificationDetails(
+         AndroidNotificationDetails(
+            'channel', 'channelName', 'channelDescription')
 
+        // android:
+        //  AndroidNotificationDetails(
+        //   channel.id,
+        //   channel.name,
+        //   channel.description,
+        //   // TODO add a proper drawable resource to android, for now using
+        //   //      one that already exists in example app.
+        //   icon: 'launch_background',
+        // ),
+         , null
+      ) ,  
+      
+      
+      );
 
-      },
-      onResume: (Map<String, dynamic> message) async {
-        
-     switch (message['screen']) {
-       case  'lecture_details' :
-         //Get.to(LectureDisscusion(message['lecture']));
-         
-         break;
+    }
+    
+    });
 
-         case 'event_details':
-         // Get.to(EventDeitals(message['event']));
-          break;
-       default:
-     }
+// RemoteMessage initialMessage =
+//         await FirebaseMessaging.instance.getInitialMessage();
 
-      },
+// debugPrint(initialMessage?.data.toString());
 
-   );
-}
+//     if (initialMessage?.data['type'] != 'chat') {
+//    Get.toNamed('notification');
+//     }
 
-static routes(){}
+    FirebaseMessaging.onBackgroundMessage((message) async {
+      RemoteNotification notification = message.notification;
+      AndroidNotification android = message.notification.android;
 
+           if (notification != null && android != null) {
+  DBProvider.db.newNotification(LocalNotification(
+        title: notification.title,
+        object: json.encode(message.data),
+        body: notification.body,
+        time: DateTime.now().millisecondsSinceEpoch));
+    flutterLocalNotificationsPlugin.show(
+      notification?.hashCode,
+      notification.title,
+      notification.body,
+      NotificationDetails(
+         AndroidNotificationDetails(
+            'channel', 'channelName', 'channelDescription')
 
-static _handleOnMessage(Map<dynamic, dynamic>  data){
+        // android:
+        //  AndroidNotificationDetails(
+        //   channel.id,
+        //   channel.name,
+        //   channel.description,
+        //   // TODO add a proper drawable resource to android, for now using
+        //   //      one that already exists in example app.
+        //   icon: 'launch_background',
+        // ),
+         , null
+      ) ,  
+      
+      
+      );
 
-
-
-}
-
-static _handleOnResume(Map<dynamic, dynamic> data){
-
-}
-
-static _handleOnLaunch(Map<dynamic, dynamic>  data){
-
-}
-
+    }
+});
+  }
 
 static subscripeToTopic(String topic){
- _firebaseMessaging.subscribeToTopic(topic);
+   FirebaseMessaging.instance.subscribeToTopic(topic);
 }
 static unSubscripeToTopic(String topic) {
-   _firebaseMessaging.unsubscribeFromTopic(topic);
+     FirebaseMessaging.instance.unsubscribeFromTopic(topic);
 }
 static Future<String>  getToken() async{
-  return await _firebaseMessaging.getToken();
+  return await   FirebaseMessaging.instance.getToken();
 }
 
 

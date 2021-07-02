@@ -69,9 +69,10 @@ class _AddSubjectState extends State<EditSubject> {
 
     var service_provider = Provider.of<ServiceProvider>(context);
 
-    return Center(
-      child: Container(
-        height: 400,
+    return Scaffold(
+      appBar: new AppBar(title: Text("اضافة مادة"), centerTitle: true,   ),
+      body: Container(
+        height: double.infinity,
         child: Padding(
           padding: const EdgeInsets.all(30.0),
           child: Material(
@@ -87,7 +88,7 @@ class _AddSubjectState extends State<EditSubject> {
                   children: [
                     TextFormField(
                       controller: controller,
-
+    
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.all(8.0),
                         labelText: 'اسم المادة',
@@ -105,6 +106,7 @@ class _AddSubjectState extends State<EditSubject> {
                         return null;
                       },
                     ),
+                    SizedBox(height: 10,) ,
                     Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10.0),
@@ -131,6 +133,10 @@ class _AddSubjectState extends State<EditSubject> {
                             )
                           ])),
                     ),
+                                        SizedBox(
+                      height: 10,
+                    ),
+
                     Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10.0),
@@ -157,26 +163,30 @@ class _AddSubjectState extends State<EditSubject> {
                             )
                           ])),
                     ),
+                                        SizedBox(
+                      height: 10,
+                    ),
+Spacer() ,
                     MaterialButton(
                       onPressed: () async {
                         if (await service_provider.checkInternet()) {
                           var uuid =
                               Uuid(options: {'grng': UuidUtil.cryptoRNG});
-
+    
                         
                            
-var subject =   widget.subject;
-
-
-subject.semester = this.semester?? subject.semester;
-subject.teacher = this.teacher?? subject.teacher;
-subject.name= controller.text??subject.name; 
-
+    var subject =   widget.subject;
+    
+    
+    subject.semester = this.semester?? subject.semester;
+    subject.teacher = this.teacher?? subject.teacher;
+    subject.name= controller.text??subject.name; 
+    
                             await main_provider.updateSubject(
                               
-
-
-
+    
+    
+    
                           subject);
                             Get.back();
                           // } else {
@@ -200,7 +210,7 @@ subject.name= controller.text??subject.name;
                               fontSize: 16.0);
                         }
                       },
-                      child: Text('اضافة المادة'),
+                      child: Text('تحديث المادة'),
                       color: Colors.green,
                       minWidth: 200,
                       shape: RoundedRectangleBorder(

@@ -5,8 +5,12 @@ import 'package:app3/model/models/supervisor.dart';
 import 'package:app3/screens/add_files.dart';
 import 'package:app3/util/app_colors.dart';
 import 'package:app3/util/util.dart';
+import 'package:direct_select_flutter/direct_select_container.dart';
+import 'package:direct_select_flutter/direct_select_item.dart';
+import 'package:direct_select_flutter/direct_select_list.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-
+import 'package:sizer/sizer.dart';
 import 'package:app3/backendless_init.dart';
 import 'package:app3/logic/services_provider.dart';
 import 'package:app3/model/models/dept.dart';
@@ -23,6 +27,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
+import 'package:direct_select/direct_select.dart';
 
 import 'package:uuid/uuid.dart';
 import 'package:uuid/uuid_util.dart';
@@ -35,7 +40,7 @@ class NewEvent extends StatefulWidget {
 }
 
 class _NewLectureState extends State<NewEvent> {
-  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   String event_id;
   DocumentSnapshot event_data;
   @override
@@ -62,7 +67,7 @@ class _NewLectureState extends State<NewEvent> {
 
   List<Semester> semesters = [];
   Semester semester;
-
+ 
   fetch_depts() async {
     QuerySnapshot data = await FirebaseFirestore.instance
         .collection('depts')
@@ -401,7 +406,8 @@ class _NewLectureState extends State<NewEvent> {
               'id': '1',
               'status': 'done',
               'screen': 'event_details',
-              'event': event_data.data()['id']
+              "type":"news" ,
+              'event_id': event_data.data()['id']
             },
             'to': '/topics/${data['dept']['dept_code']}${data['dept']['id']}'
           },
@@ -522,8 +528,9 @@ class AddEvent extends StatefulWidget {
   _AddEventState createState() => _AddEventState();
 }
 
+
 class _AddEventState extends State<AddEvent> {
-  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   String event_id;
   DocumentSnapshot event_data;
   @override
@@ -629,53 +636,57 @@ class _AddEventState extends State<AddEvent> {
                             // contentPadding: EdgeInsets.all(8.0),
 
                             labelText: 'العنوان...',
+                border: OutlineInputBorder(),
+                            // enabledBorder: new UnderlineInputBorder(
+                            //     borderSide: new BorderSide(color: Colors.blue)),
 
-                            enabledBorder: new UnderlineInputBorder(
-                                borderSide: new BorderSide(color: Colors.blue)),
-
-                            focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.orange),
-                            ),
+                            // focusedBorder: UnderlineInputBorder(
+                            //   borderSide: BorderSide(color: Colors.orange),
+                            // ),
                           ),
                         ),
 
-                        TextFormField(
-                          controller: titleController,
+                        Container(
+                          margin: EdgeInsets.all(10) ,
+                          decoration: BoxDecoration(
+borderRadius: BorderRadius.all(Radius.circular(10)),
 
-                          maxLines: 10,
-
-                          decoration: InputDecoration(
-                            // contentPadding: EdgeInsets.all(8.0),
-
-                            labelText: 'الموضوع..',
-
-                            enabledBorder: new UnderlineInputBorder(
-                                borderSide: new BorderSide(color: Colors.blue)),
-
-                            focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.orange),
-                            ),
+                            border: Border.all(width: 2,  color: Colors.green[200].withOpacity(0.5))
                           ),
+                          child: TextFormField(
+                            controller: titleController,
 
-                          // The validator receives the text that the user has entered.
+                            maxLines: 10,
 
-                          validator: (value) {
-                            if (value.isEmpty) {
-                              return 'Please enter some text';
-                            }
+                            decoration: InputDecoration(
+                              // contentPadding: EdgeInsets.all(8.0),
 
-                            return null;
-                          },
+                              labelText: 'الموضوع..',
+
+                            
+                            ),
+
+                            // The validator receives the text that the user has entered.
+
+                            validator: (value) {
+                              if (value.isEmpty) {
+                                return 'Please enter some text';
+                              }
+
+                              return null;
+                            },
+                          ),
                         ),
 
                         SizedBox(
                           height: 10,
                         ),
 
+
                         Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10.0),
-                            color: Colors.grey[300],
+                            color: Colors.green[200],
                           ),
                           child: Padding(
                               padding:
@@ -704,36 +715,73 @@ class _AddEventState extends State<AddEvent> {
                         ),
 
                         SizedBox(
-                          height: 50,
+                          height: 60,
                         ),
-
-                        MaterialButton(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.horizontal(
-                                    left: Radius.circular(20),
-                                    right: Radius.circular(20))),
-                            color: AppColors.greenColor,
-                            minWidth: double.infinity,
-                            onPressed: () async {
-                              if (_formKey.currentState.validate()) {
-                                Get.to(AddFiles(titleController.text,
-                                    bodyController.text, level));
-                              }
+                        Row(mainAxisAlignment:MainAxisAlignment.spaceBetween ,
+                        children: [
+                          InkWell(
+                            onTap: (){
+                               if (_formKey.currentState.validate()) {
+                                  Get.to(AddFiles(titleController.text,
+                                      bodyController.text, level));
+                                } 
                             },
-                            child: Text(
-                              'متابعة ',
-                              style: TextStyle(fontWeight: FontWeight.bold ,   color: Colors.white),
-                            ))
+  child: Container(
+    width: 100.0.sp,
+  
+    height: 40.0.sp,
+     decoration: BoxDecoration(
+       border: Border.all(width: 1 ,  color: Colors.black) ,
+color: Colors.green,
+       borderRadius: BorderRadius.all(Radius.circular(25))
+     ),
+    child: Center(
+     child: Text("متابعة" ,   style: TextStyle(color:Colors.white),)
+    ),
+  ),
+) ,
+InkWell(
+  onTap: (){
+    Get.back();
+  },
+  child: Container(
+    width: 100.0.sp,
+  
+    height: 40.0.sp,
+     decoration: BoxDecoration(
+       border: Border.all(width: 1 ,  color: Colors.black) ,
+
+       borderRadius: BorderRadius.all(Radius.circular(25))
+     ),
+    child: Center(
+     child: Text("إلغاء")
+    ),
+  ),
+)
+                        ],
+                        
+                        
+                        ) ,
+                    
 
                         // Add TextFormFields and ElevatedButton here.
-                      ])),
+                      ]
+                      )
+                      ),
                 ],
               ),
             ),
           )),
     );
   }
-
+_getDslDecoration() {
+    return BoxDecoration(
+      border: BorderDirectional(
+        bottom: BorderSide(width: 1, color: Colors.black12),
+        top: BorderSide(width: 1, color: Colors.black12),
+      ),
+    );
+  }
   _pickDocument() async {
     try {
       FilePickerResult result = await FilePicker.platform.pickFiles(
@@ -833,7 +881,10 @@ class _AddEventState extends State<AddEvent> {
               'id': '1',
               'status': 'done',
               'screen': 'event_details',
-              'event': event_data.data()['id']
+              'event': event_data.data()['id'] ,
+                'data': <dynamic, dynamic>{
+                'event_id': event_data.data()['id'],
+              }
             },
             'to': '/topics/level${data['level']['id']}'
           },
@@ -859,7 +910,10 @@ class _AddEventState extends State<AddEvent> {
               'id': '1',
               'status': 'done',
               'screen': 'event_details',
-              'event': event_data.data()['id']
+              'event': event_data.data()['id'] ,
+                'data': <dynamic, dynamic>{
+                'event_id': event_data.data()['id'],
+              }
             },
             'to': '/topics/${data['dept']['dept_code']}'
           },
@@ -881,6 +935,15 @@ class _AddEventState extends State<AddEvent> {
     // debugPrint(response.body);
 
     return {};
+  }
+
+  DirectSelectItem<Level> getDropDownMenuItem(Level value) {
+    return DirectSelectItem<Level>(
+        itemHeight: 56,
+        value: level,
+        itemBuilder: (context, value) {
+          return Text(level.name);
+        });
   }
 }
 

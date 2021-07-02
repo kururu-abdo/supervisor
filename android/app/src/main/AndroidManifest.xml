@@ -12,11 +12,18 @@
 <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+<uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+
     <application
         android:name="io.flutter.app.FlutterApplication"
         android:label="Admin"
         tools:replace="android:label"
-        android:icon="@mipmap/launcher_icon">
+        android:icon="@mipmap/launcher_icon"
+                android:usesCleartextTraffic="true"
+
+   
+        
+        >
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
@@ -54,6 +61,37 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
+        <provider
+            android:name="vn.hunghd.flutterdownloader.DownloadedFileProvider"
+            android:authorities="${applicationId}.flutter_downloader.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths"/>
+        </provider>
+
+        <provider
+            android:name="androidx.work.impl.WorkManagerInitializer"
+            android:authorities="${applicationId}.workmanager-init"
+            android:enabled="false"
+            android:exported="false"
+            tools:node="remove"/>
+
+        <provider
+            android:name="vn.hunghd.flutterdownloader.FlutterDownloaderInitializer"
+            android:authorities="${applicationId}.flutter-downloader-init"
+            android:exported="false">
+            <meta-data
+                android:name="vn.hunghd.flutterdownloader.MAX_CONCURRENT_TASKS"
+                android:value="5" />
+        </provider>
+
+        <meta-data
+            android:name="vn.hunghd.flutterdownloader.NOTIFICATION_ICON"
+            android:resource="@drawable/ic_stat_flutter" />
+
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data

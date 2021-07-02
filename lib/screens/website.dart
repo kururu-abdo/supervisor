@@ -30,7 +30,6 @@ class _WebState extends State<WebSite> {
       child: SafeArea(
           child: Scaffold(
         appBar: AppBar(
-         
           centerTitle: true,
           title: Text('موقع الجامعة'),
         ),
@@ -39,7 +38,8 @@ class _WebState extends State<WebSite> {
           child: Padding(
               padding: EdgeInsets.only(top: 10.0),
               child: WebView(
-                initialUrl: 'http://www.karary.edu.sd/colleges/computer-sciences-and-information-technology/',
+                initialUrl:
+                    'http://www.karary.edu.sd/colleges/computer-sciences-and-information-technology/',
                 javascriptMode: JavascriptMode.unrestricted,
 
                 onWebViewCreated: (WebViewController webViewController) {

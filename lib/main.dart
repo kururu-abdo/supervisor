@@ -1,12 +1,18 @@
+import 'dart:convert';
+
 import 'package:app3/backendless_init.dart';
 import 'package:app3/firebase_init.dart';
 import 'package:app3/logic/event_provider.dart';
 import 'package:app3/logic/main_provider.dart';
 import 'package:app3/logic/services_provider.dart';
 import 'package:app3/logic/user_provider.dart';
+import 'package:app3/model/models/chat_user.dart';
+import 'package:app3/model/models/notification.dart';
 import 'package:app3/model/models/supervisor.dart';
 import 'package:app3/screens/add_event.dart';
+import 'package:app3/screens/chat_page.dart';
 import 'package:app3/screens/departments.dart';
+import 'package:app3/util/local_database.dart';
 import 'package:sizer/sizer.dart';
 import 'package:app3/screens/events.dart';
 import 'package:app3/screens/profile_page.dart';
@@ -29,12 +35,91 @@ import 'package:get_storage/get_storage.dart';
 import 'package:load/load.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer_util.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  // If you're going to use other Firebase services in the background, such as Firestore,
+  // make sure you call `initializeApp` before using other Firebase services.
+  await Firebase.initializeApp();
+RemoteNotification notification = message.notification;
+  AndroidNotification android = message.notification.android;
+    if (notification != null && android != null) {
+  DBProvider.db.newNotification(LocalNotification(
+        title: notification.title,
+        object: json.encode(message.data),
+        body: notification.body,
+        time: DateTime.now().millisecondsSinceEpoch));
+    flutterLocalNotificationsPlugin.show(
+      notification?.hashCode,
+      notification.title,
+      notification.body,
+      NotificationDetails(
+         AndroidNotificationDetails(
+            'channel', 'channelName', 'channelDescription' ,
+            
+            
+            ) ,
+
+        // android:
+        //  AndroidNotificationDetails(
+        //   channel.id,
+        //   channel.name,
+        //   channel.description,
+        //   // TODO add a proper drawable resource to android, for now using
+        //   //      one that already exists in example app.
+        //   icon: 'launch_background',
+        // ),
+         null
+      ) ,  
+      payload: json.encode(message.data['data'])
+      
+      );
+
+    }
+  //Get.toNamed('/notification');
+}
 
 main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await GetStorage.init();
   await Firebase.initializeApp();
   await FlutterDownloader.initialize();
+  FlutterDownloader.registerCallback(TestClass.callback);
+
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+    alert: true,
+    badge: true,
+    sound: true,
+  );
+   final NotificationAppLaunchDetails notificationAppLaunchDetails =
+      await flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
+
+  const AndroidInitializationSettings initializationSettingsAndroid =
+      AndroidInitializationSettings('app_icon');
+
+  final InitializationSettings initializationSettings = InitializationSettings(
+     initializationSettingsAndroid, null
+  );
+  await flutterLocalNotificationsPlugin.initialize(initializationSettings,
+      onSelectNotification: (String payload) async {
+    if (payload != null) {  }
+      var playloadData = json.decode(payload);
+
+       var me =   User.fromJson(playloadData['receiver']);
+       var user =   User.fromJson(playloadData['sender']);
+
+Get.to(ChatPage(user:user ,  me:me));
+
+
+      });
+
+
+
+
   runApp(
 
  MultiProvider(providers: [
@@ -44,6 +129,9 @@ main() async {
         Provider<EventProvider>(create: (_) => EventProvider()),
         ChangeNotifierProvider(create: (_)=> MainProvider())
       ], child: MyApp()));
+}
+class TestClass{
+     static void callback(String id, DownloadTaskStatus status, int progress) {}
 }
 
 class MyApp extends StatelessWidget {
@@ -166,7 +254,7 @@ getSuperVisor(){
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: AppColors.greenColor,
+        backgroundColor: Colors.green,
         appBar: AppBar(
           elevation: 0.0,
           // toolbarHeight: 80,

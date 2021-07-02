@@ -2,8 +2,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get_storage/get_storage.dart';
 
 GetStorage getStorage = new GetStorage();
-FirebaseMessaging firebaseMessaging = new FirebaseMessaging();
-FirebaseMessaging firebaseMessaging2 = new FirebaseMessaging();
 const String serverToken =
     'AAAAmLQY4zc:APA91bHOu6VSlURNXye9jO1HHEadpwT6Vjv6PZDjhf9dqC-vxDh184KEVRhUWDlgjqUSEv_8G6ic8huYuCew97ZoDAhY2YqOEEarZtvS7AYRp9pFWu2Z-fOJt6Flfuy1L92GBXxKsl6m';
 

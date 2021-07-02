@@ -1,16 +1,20 @@
 import 'dart:io';
 
 import 'package:app3/logic/main_provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_file_preview/flutter_file_preview.dart';
+import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:open_file/open_file.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 class EventDetails extends StatefulWidget {
   final Map data;
   String document_id;
-  EventDetails(this.data ,  this.document_id);
+  EventDetails(this.data, this.document_id);
 
   @override
   _EventDetailsState createState() => _EventDetailsState();
@@ -21,8 +25,53 @@ class _EventDetailsState extends State<EventDetails> {
   @override
   void initState() {
     super.initState();
-
+    _permissionReady= false;
+    _prepareSaveDir();
     fill_array();
+  }
+   bool _permissionReady;
+
+  String _localPath;
+  Future<void> _prepareSaveDir() async {
+    _localPath = (await _findLocalPath()) + Platform.pathSeparator + 'Download';
+
+    final savedDir = Directory(_localPath);
+    bool hasExisted = await savedDir.exists();
+    if (!hasExisted) {
+      savedDir.create();
+    }
+  }
+ Future<void> _retryRequestPermission() async {
+    final hasGranted = await _checkPermission();
+
+    if (hasGranted) {
+      await _prepareSaveDir();
+    }
+
+    setState(() {
+      _permissionReady = hasGranted;
+    });
+  }
+  _checkPermission() async {
+      final status = await Permission.storage.status;
+      bool granted;
+      if (status != PermissionStatus.granted) {
+        final result = await Permission.storage.request();
+        if (result == PermissionStatus.granted) {
+          granted= true;
+        }else{
+          granted= false;
+        }
+      } else {
+        granted= true;
+      }
+    
+    
+    return granted;
+  }
+  Future<String> _findLocalPath() async {
+    final directory = await getExternalStorageDirectory();
+    return directory.path;
   }
 
   fill_array() {
@@ -36,11 +85,15 @@ class _EventDetailsState extends State<EventDetails> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
+Stream eventStream = FirebaseFirestore.instance
+        .collection('events')
+        .doc(widget.document_id)
+        .snapshots();
 
     /*24 is for notification bar on Android*/
     final double itemHeight = (size.height - kToolbarHeight - 24) / 2;
     final double itemWidth = size.width / 2;
-    var mainProcider =  Provider.of<MainProvider>(context);
+    var mainProcider = Provider.of<MainProvider>(context);
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
@@ -51,7 +104,14 @@ class _EventDetailsState extends State<EventDetails> {
           ),
           body: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: ListView(
+            child: 
+            
+            
+            
+            
+            
+            
+            ListView(
               children: [
                 Container(
                     decoration: BoxDecoration(boxShadow: [
@@ -94,14 +154,34 @@ class _EventDetailsState extends State<EventDetails> {
                             shrinkWrap: true,
                             children: files.map((file) {
                               print(file);
-
+if(file.endsWith(".jpeg") || file.endsWith(".png") || file.endsWith(".jpg") ){
+return InkWell(
+  onTap: () async{
+ await OpenFile.open(file);
+ 
+  },
+  child: Stack(children:  [ Image.network(file)   ,     Positioned(
+                                        top: 0,
+                                        right: 0,
+                                        child: IconButton(
+                                            onPressed: () async {
+                                              debugPrint("deleting");
+                                              try {
+                                                await mainProcider
+                                                    .deleteEventFile(file,
+                                                        widget.document_id);
+                                              } catch (e) {
+                                                debugPrint(e);
+                                              }
+                                              //logic for delete item from firebase
+                                            },
+                                            icon: Icon(Icons.delete_rounded))),  ])  ,      );  
+}
                               return Stack(children: [
                                 InkWell(
-                                  onTap: () async{
-                                    FlutterFilePreview.openFile(
-                                        file,
+                                  onTap: () async {
+                                    FlutterFilePreview.openFile(file,
                                         title: widget.data['body']);
-
                                   },
                                   child: Container(
                                     margin: EdgeInsets.all(5.0),
@@ -109,8 +189,8 @@ class _EventDetailsState extends State<EventDetails> {
                                     child: Column(
                                       children: [
                                         IconButton(
-                                            icon:
-                                                Icon(Icons.download_done_rounded),
+                                            icon: Icon(
+                                                Icons.download_done_rounded),
                                             onPressed: () {
                                               _requestDownload(file);
                                             }),
@@ -123,89 +203,20 @@ class _EventDetailsState extends State<EventDetails> {
                                     top: 0,
                                     left: 0,
                                     child: IconButton(
-                                        onPressed: ()async{
-debugPrint("deleting");
+                                        onPressed: () async {
+                                          debugPrint("deleting");
                                           try {
                                             await mainProcider.deleteEventFile(
                                                 file, widget.document_id);
-
                                           } catch (e) {
                                             debugPrint(e);
                                           }
-                                          //logic for delete item from firebase 
-
-
+                                          //logic for delete item from firebase
                                         },
-                                        icon: Icon(Icons.delete))) ,
-
-
-
-
+                                        icon: Icon(Icons.delete))),
                               ]);
-
-                              return Stack(
-                                children: [
-                                  Container(
-                                    color: Colors.green[300],
-                                    height: 200,
-                                    child: Stack(
-                                      children: [
-                                        Positioned(
-                                          top: 0,
-                                          right: 5,
-                                          child: IconButton(
-                                              icon: Icon(
-                                                  Icons.download_done_rounded),
-                                              onPressed: () {
-                                                _requestDownload(file);
-                                              }),
-                                        ),
-                                        Align(
-                                          alignment: Alignment.center,
-                                          child: Text('ملف '),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              );
                             }).toList()
-                              ..add(
-                                Stack(children: [
-                                  Container(
-                                    constraints: BoxConstraints(
-                                        maxWidth: 250.0, minHeight: 50.0),
-                                    margin: EdgeInsets.all(10),
-                                    child: RaisedButton(
-                                      onPressed: () {},
-                                      color: Theme.of(context).accentColor,
-                                      child: Padding(
-                                        padding: EdgeInsets.all(0),
-                                        child: Container(
-                                          alignment: Alignment.center,
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: <Widget>[
-                                              Text(
-                                                'اضافة ملف',
-                                                style: TextStyle(
-                                                  fontSize: 15,
-                                                  color: Colors.white,
-                                                ),
-                                              ),
-                                              Icon(
-                                                Icons.add,
-                                                color: Colors.white,
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ]),
-                              ),
+                             
                           )
                         : Column(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -218,11 +229,19 @@ debugPrint("deleting");
                 ),
               ],
             ),
-          )),
+          
+          
+          
+          
+          )
+          
+          ),
     );
   }
 
   void _requestDownload(String link) async {
+    var result  =  await _checkPermission();
+    if(result != null && result){
     Directory appDocDir = await getApplicationDocumentsDirectory();
     String appDocPath = appDocDir.path;
 
@@ -233,7 +252,10 @@ debugPrint("deleting");
           true, // show download progress in status bar (for Android)
       openFileFromNotification: true,
       savedDir:
-          appDocPath, // click on notification to open downloaded file (for Android)
+          _localPath,
+        fileName:DateTime.now().toString()// click on notification to open downloaded file (for Android)
     );
+  }
+
   }
 }

@@ -24,6 +24,9 @@ import 'package:uuid/uuid.dart';
 import 'package:uuid/uuid_util.dart';
 
 class MainProvider  extends ChangeNotifier {
+
+
+
   Stream<List<Teacher>> getTeachers() async* {
     QuerySnapshot data = await FirebaseFirestore.instance
         .collection('teacher')
@@ -278,6 +281,9 @@ if (data.docs.length>0) {
     });
 
     future.dismiss();
+          Get.defaultDialog(
+        title: 'تم', content: Text('تمت تحديث بيانات  الاستاذ بنجاح'));
+
   }
 
   Future<APIresponse<Supervisor>> getSuperVisorData(
