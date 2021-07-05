@@ -156,7 +156,7 @@ final SearchStudent _delegate = SearchStudent();
                               contentPadding: EdgeInsets.symmetric(
                                   horizontal: 20.0, vertical: 10.0),
                               title: Text(
-                               "بحث عن طالب برقم الجلوس",
+                               "بحث عن طالب بالرقم الجامعي",
                                 style: TextStyle(
                                     color: Colors.black,
                                     fontWeight: FontWeight.bold),
@@ -523,39 +523,84 @@ void initState() {
 appBar: AppBar(title: Text('${widget.student.name}'), centerTitle: true,),
 
 
-body: Padding(padding: EdgeInsets.all(20.0) ,
-
-
-child: ListView(
-  children: [
-Row(
-mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  children: [CustomButton(onWarning, 'إنذار', Icons.warning, AppColors.errorColor) ,
+body: Center(
+  child:   Column(
   
+     mainAxisAlignment: MainAxisAlignment.center,
   
-  CustomButton(onValuated, 'إشادة', Icons.done
+     children: <Widget>[
   
+       CircleAvatar(
   
-  ,AppColors.secondaryVariantColor)
+         radius: 50.0,
   
-  ], 
-
-
-
+         backgroundImage: AssetImage('assets/images/karari.png'),
   
-)  ,
-
-SizedBox(height: 50,) ,
-Visibility(
-  visible: showWarningForm,
-  child: warningForm(context)) ,
-Visibility(
-  visible: showValueForm,
-  child: valueForm(context)) ,
-
-  ],
-),
-
+       ),
+  
+       Text(
+  
+         widget.student.name,
+  
+         style: TextStyle(
+  
+           fontSize: 30.0,
+  
+           fontFamily: 'Pacifico',
+  
+           fontWeight: FontWeight.bold,
+  
+           color: Colors.black,
+  
+         ),
+  
+       ),
+  
+       Text(
+  
+         '${widget.student.level.name}'.toUpperCase(),
+  
+         style: TextStyle(
+  
+           fontSize: 20.0,
+  
+           fontFamily: 'SourceSansPro',
+  
+           color: Colors.teal.shade100,
+  
+           fontWeight: FontWeight.bold,
+  
+           letterSpacing: 2.5,
+  
+         ),
+  
+       ),
+  
+       
+  
+        Text(
+  
+                '${widget.student.id_number}'.toUpperCase(),
+  
+                style: TextStyle(
+  
+                  fontSize: 20.0,
+  
+                  fontFamily: 'SourceSansPro',
+  
+                  color: Colors.teal.shade100,
+  
+                  fontWeight: FontWeight.bold,
+  
+                  letterSpacing: 2.5,
+  
+                ),
+  
+              ),
+  
+       
+  
+       ]),
 ),
     );
   }

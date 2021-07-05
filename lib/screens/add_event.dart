@@ -10,6 +10,7 @@ import 'package:direct_select_flutter/direct_select_item.dart';
 import 'package:direct_select_flutter/direct_select_list.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:sizer/sizer.dart';
 import 'package:app3/backendless_init.dart';
 import 'package:app3/logic/services_provider.dart';
@@ -412,8 +413,41 @@ class _NewLectureState extends State<NewEvent> {
             'to': '/topics/${data['dept']['dept_code']}${data['dept']['id']}'
           },
         ),
+
       );
       debugPrint(response.body);
+    Alert(
+        context: context,
+        type: AlertType.warning,
+        title: "RFLUTTER ALERT",
+        desc: "Flutter is more awesome with RFlutter Alert.",
+        buttons: [
+          DialogButton(
+            child: Text(
+              "FLAT",
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+            onPressed: () => Navigator.pop(context),
+            color: Color.fromRGBO(0, 179, 134, 1.0),
+          ),
+          DialogButton(
+            child: Text(
+              "GRADIENT",
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+            onPressed: () => Navigator.pop(context),
+            gradient: LinearGradient(colors: [
+              Color.fromRGBO(116, 116, 191, 1.0),
+              Color.fromRGBO(52, 138, 199, 1.0)
+            ]),
+          )
+        ],
+      ).show();
+
+
+
+
+
     } else if (data['dept'] == null && data['level'] != null) {
       debugPrint('level is not null');
       var response = await http.post(
@@ -436,7 +470,7 @@ class _NewLectureState extends State<NewEvent> {
               'screen': 'event_details',
               'event': event_data.data()['id']
             },
-            'to': '/topics/level${data['level']['id']}'
+            'to': '/topics/${data['dept']['dept_code']}level${data['level']['id']}'
           },
         ),
       );

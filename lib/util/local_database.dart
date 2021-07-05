@@ -62,6 +62,20 @@ class DBProvider {
     return res > 0 ? true : false;
   }
 
+
+ deleteNotifica(LocalNotification notification) async {
+    final db = await database;
+
+
+var res =   await   db.delete("Notification"  ,   where: "id=?" ,  whereArgs: [notification.id]);
+
+
+
+    return res ;
+  }
+
+
+
   Future<List<LocalNotification>> getAllNotification() async {
     final db = await database;
     var res = await db.query("Notification", where: "isread=?", whereArgs: [0]);

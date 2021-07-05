@@ -36,7 +36,7 @@ RemoteNotification notification = message.notification;
       notification.title,
       notification.body,
       NotificationDetails(
-         AndroidNotificationDetails(
+      android:   AndroidNotificationDetails(
             'channel', 'channelName', 'channelDescription')
 
         // android:
@@ -48,7 +48,7 @@ RemoteNotification notification = message.notification;
         //   //      one that already exists in example app.
         //   icon: 'launch_background',
         // ),
-         , null
+         , 
       ) ,  
       
       
@@ -72,7 +72,7 @@ RemoteNotification notification = message.notification;
       notification.title,
       notification.body,
       NotificationDetails(
-         AndroidNotificationDetails(
+     android:    AndroidNotificationDetails(
             'channel', 'channelName', 'channelDescription')
 
         // android:
@@ -84,7 +84,7 @@ RemoteNotification notification = message.notification;
         //   //      one that already exists in example app.
         //   icon: 'launch_background',
         // ),
-         , null
+         
       ) ,  
       
       
@@ -118,7 +118,7 @@ RemoteNotification notification = message.notification;
       notification.title,
       notification.body,
       NotificationDetails(
-         AndroidNotificationDetails(
+      android  : AndroidNotificationDetails(
             'channel', 'channelName', 'channelDescription')
 
         // android:
@@ -130,7 +130,7 @@ RemoteNotification notification = message.notification;
         //   //      one that already exists in example app.
         //   icon: 'launch_background',
         // ),
-         , null
+         
       ) ,  
       
       

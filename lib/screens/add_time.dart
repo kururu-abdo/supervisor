@@ -202,7 +202,7 @@ var formKey =  GlobalKey<FormState>();
        
         controller: hallController,
                         decoration: InputDecoration(
-                            suffixIcon: Icon(Icons.timer),
+                            suffixIcon: Icon(Icons.place),
                             border: OutlineInputBorder(),
                             hintText: 'القاعة'),
                         validator: (str) {

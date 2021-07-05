@@ -67,7 +67,7 @@ class _TimeTableState extends State<TimeTable> {
                           decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius:
-                                  BorderRadius.all(Radius.circular(10)),
+                                  BorderRadius.all(Radius.circular(15)),
                               boxShadow: [BoxShadow()]),
                           child: ListTile(
                               trailing: IconButton(

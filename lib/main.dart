@@ -12,6 +12,8 @@ import 'package:app3/model/models/supervisor.dart';
 import 'package:app3/screens/add_event.dart';
 import 'package:app3/screens/chat_page.dart';
 import 'package:app3/screens/departments.dart';
+import 'package:app3/util/app.dart';
+import 'package:app3/util/fcm_config.dart';
 import 'package:app3/util/local_database.dart';
 import 'package:sizer/sizer.dart';
 import 'package:app3/screens/events.dart';
@@ -44,41 +46,36 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   // If you're going to use other Firebase services in the background, such as Firestore,
   // make sure you call `initializeApp` before using other Firebase services.
   await Firebase.initializeApp();
-RemoteNotification notification = message.notification;
+  RemoteNotification notification = message.notification;
   AndroidNotification android = message.notification.android;
-    if (notification != null && android != null) {
-  DBProvider.db.newNotification(LocalNotification(
+  if (notification != null && android != null) {
+    DBProvider.db.newNotification(LocalNotification(
         title: notification.title,
         object: json.encode(message.data),
         body: notification.body,
         time: DateTime.now().millisecondsSinceEpoch));
     flutterLocalNotificationsPlugin.show(
-      notification?.hashCode,
-      notification.title,
-      notification.body,
-      NotificationDetails(
-         AndroidNotificationDetails(
-            'channel', 'channelName', 'channelDescription' ,
-            
-            
-            ) ,
-
-        // android:
-        //  AndroidNotificationDetails(
-        //   channel.id,
-        //   channel.name,
-        //   channel.description,
-        //   // TODO add a proper drawable resource to android, for now using
-        //   //      one that already exists in example app.
-        //   icon: 'launch_background',
-        // ),
-         null
-      ) ,  
-      payload: json.encode(message.data['data'])
-      
-      );
-
-    }
+        notification?.hashCode,
+        notification.title,
+        notification.body,
+        NotificationDetails(
+          android: AndroidNotificationDetails(
+            'channel',
+            'channelName',
+            'channelDescription',
+          ),
+          // android:
+          //  AndroidNotificationDetails(
+          //   channel.id,
+          //   channel.name,
+          //   channel.description,
+          //   // TODO add a proper drawable resource to android, for now using
+          //   //      one that already exists in example app.
+          //   icon: 'launch_background',
+          // ),
+        ),
+        payload: json.encode(message.data['data']));
+  }
   //Get.toNamed('/notification');
 }
 
@@ -90,127 +87,113 @@ main() async {
   FlutterDownloader.registerCallback(TestClass.callback);
 
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+  await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
     alert: true,
     badge: true,
     sound: true,
   );
-   final NotificationAppLaunchDetails notificationAppLaunchDetails =
+  final NotificationAppLaunchDetails notificationAppLaunchDetails =
       await flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
 
   const AndroidInitializationSettings initializationSettingsAndroid =
       AndroidInitializationSettings('app_icon');
 
   final InitializationSettings initializationSettings = InitializationSettings(
-     initializationSettingsAndroid, null
+    android: initializationSettingsAndroid,
   );
   await flutterLocalNotificationsPlugin.initialize(initializationSettings,
       onSelectNotification: (String payload) async {
-    if (payload != null) {  }
-      var playloadData = json.decode(payload);
+    if (payload != null) {}
+    var playloadData = json.decode(payload);
 
-       var me =   User.fromJson(playloadData['receiver']);
-       var user =   User.fromJson(playloadData['sender']);
+    var me = User.fromJson(playloadData['receiver']);
+    var user = User.fromJson(playloadData['sender']);
 
-Get.to(ChatPage(user:user ,  me:me));
+    Get.to(ChatPage(user: user, me: me));
+  });
 
-
-      });
-
-
-
-
-  runApp(
-
- MultiProvider(providers: [
-        Provider<ServiceProvider>(create: (_) => ServiceProvider()),
-        Provider<UserProvider>(create: (_) => UserProvider()),
-       
-        Provider<EventProvider>(create: (_) => EventProvider()),
-        ChangeNotifierProvider(create: (_)=> MainProvider())
-      ], child: MyApp()));
+  runApp(MultiProvider(providers: [
+    Provider<ServiceProvider>(create: (_) => ServiceProvider()),
+    Provider<UserProvider>(create: (_) => UserProvider()),
+    Provider<EventProvider>(create: (_) => EventProvider()),
+    ChangeNotifierProvider(create: (_) => MainProvider())
+  ], child: MyApp()));
 }
-class TestClass{
-     static void callback(String id, DownloadTaskStatus status, int progress) {}
+
+class TestClass {
+  static void callback(String id, DownloadTaskStatus status, int progress) {}
 }
 
 class MyApp extends StatelessWidget {
   static final navigatorKey = GlobalKey<NavigatorState>();
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(                           //return LayoutBuilder
+    return LayoutBuilder(
+      //return LayoutBuilder
       builder: (context, constraints) {
-        return OrientationBuilder(                  //return OrientationBuilder
+        return OrientationBuilder(
+          //return OrientationBuilder
           builder: (context, orientation) {
             //initialize SizerUtil()
-            SizerUtil().init(constraints, orientation);  //initialize SizerUtil
+            SizerUtil().init(constraints, orientation); //initialize SizerUtil
             return GetMaterialApp(
-      title: 'Flutter Demo',
-      debugShowCheckedModeBanner: false,
-      // locale: new Locale('ar'),
-       localizationsDelegates: [
-          CustomLocalizationDelegate(),
-        ],
-       supportedLocales: [
-             Locale('en', 'US'),
-          Locale('ar', ''),
-        ],
-        theme:
-              ThemeData.from(colorScheme: ColorScheme.light(
-      primary: Colors.green ,
-                secondary: Colors.green[100] ,
-                onPrimary: Colors.black ,
-                onSecondary: Colors.black ,
+                title: 'Flutter Demo',
+                 navigatorKey: App.navigatorKey,
+                debugShowCheckedModeBanner: false,
+                // locale: new Locale('ar'),
+                localizationsDelegates: [
+                  CustomLocalizationDelegate(),
+                ],
+                supportedLocales: [
+                  Locale('en', 'US'),
+                  Locale('ar', ''),
+                ],
+                theme: ThemeData.from(
+                    colorScheme: ColorScheme.light(
+                        primary: Colors.green,
+                        secondary: Colors.green[100],
+                        onPrimary: Colors.black,
+                        onSecondary: Colors.black,
+                        surface: Colors.white,
+                        onSurface: Colors.black)),
+                //
+                // ThemeData(
+                //   primaryColor: AppColors.PrimaryColor ,
+                //   backgroundColor: AppColors.backgroundColor ,
+                //   scaffoldBackgroundColor: AppColors.backgroundColor ,
+                //
+                //   secondaryHeaderColor: AppColors.secondaryColor ,
+                //   colorScheme: ColorScheme(primary: AppColors.PrimaryColor, primaryVariant: AppColors.primaryVariantColor, secondary: AppColors.secondaryColor, secondaryVariant: AppColors.secondaryVariantColor , surface: AppColors.surfaceColor, background: AppColors.backgroundColor ,error: AppColors.errorColor, onPrimary: AppColors.onPrimary , onSecondary: AppColors.onSecondary, onSurface: AppColors.onPrimary, onBackground: AppColors.onPrimary, onError: AppColors.onBackground, brightness: Brightness.light)
+                //
+                //
+                // ) ,
+                // theme: ThemeData(brightness: Brightness.light, primarySwatch: AppColors.PrimaryColor) ,
+                // This makes the visual density adapt to the platform that you run
+                // the app on. For desktop platforms, the controls will be smaller and
+                // closer together (more dense) than on mobile platforms.
 
-surface: Colors.white ,
-onSurface: Colors.black
-              )) ,
-        //
-        // ThemeData(
-        //   primaryColor: AppColors.PrimaryColor ,
-        //   backgroundColor: AppColors.backgroundColor ,
-        //   scaffoldBackgroundColor: AppColors.backgroundColor ,
-        //
-        //   secondaryHeaderColor: AppColors.secondaryColor ,
-        //   colorScheme: ColorScheme(primary: AppColors.PrimaryColor, primaryVariant: AppColors.primaryVariantColor, secondary: AppColors.secondaryColor, secondaryVariant: AppColors.secondaryVariantColor , surface: AppColors.surfaceColor, background: AppColors.backgroundColor ,error: AppColors.errorColor, onPrimary: AppColors.onPrimary , onSecondary: AppColors.onSecondary, onSurface: AppColors.onPrimary, onBackground: AppColors.onPrimary, onError: AppColors.onBackground, brightness: Brightness.light)
-        //
-        //
-        // ) ,
-      // theme: ThemeData(brightness: Brightness.light, primarySwatch: AppColors.PrimaryColor) ,
-          // This makes the visual density adapt to the platform that you run
-          // the app on. For desktop platforms, the controls will be smaller and
-          // closer together (more dense) than on mobile platforms.
-
-      //     ),
-      builder: (context, widget){
-
-      return 
-        LoadingProvider(
-      themeData: LoadingThemeData(
-        loadingBackgroundColor: Colors.white,
-        backgroundColor: Colors.black54,
-      ),
-      loadingWidgetBuilder: (ctx, data) {
-        return Center(
-          child: SizedBox(
-            width: 30,
-            height: 30,
-            child: Container(
-              child: CupertinoActivityIndicator(),
-              color: Colors.blue,
-            ),
-          ),
-        );
-      },
-      child :widget
-      
-      
-      );
-      },
-    home: WelcomeScreen()
-      
-      
-      );
+                //     ),
+                builder: (context, widget) {
+                  return LoadingProvider(
+                      themeData: LoadingThemeData(
+                        loadingBackgroundColor: Colors.white,
+                        backgroundColor: Colors.black54,
+                      ),
+                      loadingWidgetBuilder: (ctx, data) {
+                        return Center(
+                          child: SizedBox(
+                            width: 30,
+                            height: 30,
+                            child: Container(
+                              child: CupertinoActivityIndicator(),
+                              color: Colors.blue,
+                            ),
+                          ),
+                        );
+                      },
+                      child: widget);
+                },
+                home: WelcomeScreen());
           },
         );
       },
@@ -229,16 +212,17 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomeState extends State<HomePage> {
+  Supervisor supervisor;
 
-Supervisor supervisor;
+  getSuperVisor() {
+    var admin = Utils.getSuperVisor();
+    setState(() {
+      supervisor = admin;
+    });
 
-getSuperVisor(){
 
-  var admin =Utils.getSuperVisor();
-  setState(() {
-    supervisor= admin;
-  });
-}
+    FCMConfig.subscripeToTopic('supervisor'+supervisor.id);
+  }
 
   @override
   void initState() {
@@ -256,6 +240,21 @@ getSuperVisor(){
       child: Scaffold(
         backgroundColor: Colors.green,
         appBar: AppBar(
+
+actions: [
+
+IconButton(onPressed: (){
+  // Get.to(NotificationPage());
+}, icon: Icon(Icons.notifications_active))
+
+
+],
+
+
+
+
+
+
           elevation: 0.0,
           // toolbarHeight: 80,
           title: Text('المشرف'),
@@ -264,11 +263,13 @@ getSuperVisor(){
           //     borderRadius: BorderRadius.only(
           //   bottomLeft: Radius.circular(20),
           //   bottomRight: Radius.circular(20),
-          
+
           // ))
-          
-         
         ),
+
+
+
+
         drawer: Container(
           width: MediaQuery.of(context).size.width / 2,
           child: Drawer(
@@ -298,15 +299,16 @@ getSuperVisor(){
                           //   ),
                           // ),
                         ),
-                        Text(main_provider.getAdmin().name ,  style:TextStyle(fontWeight: FontWeight.bold))
+                        Text(main_provider.getAdmin().name,
+                            style: TextStyle(fontWeight: FontWeight.bold))
                       ],
                     ),
                   ),
-                  decoration:
-                      BoxDecoration(color: AppColors.greenColor),
+                  decoration: BoxDecoration(color: AppColors.greenColor),
                 ),
                 ListTile(
-                  leading: Icon(Icons.account_box,
+                  leading: Icon(
+                    Icons.account_box,
                     color: AppColors.secondaryVariantColor,
                   ),
                   title: Text('الملف الشخصي'),
@@ -322,7 +324,10 @@ getSuperVisor(){
                   height: 10.0,
                 ),
                 ListTile(
-                  leading: Icon(Icons.web ,   color: AppColors.secondaryVariantColor,),
+                  leading: Icon(
+                    Icons.web,
+                    color: AppColors.secondaryVariantColor,
+                  ),
                   title: Text('موقع الجامعة'),
                   onTap: () {
                     // Update the state of the app.
@@ -337,7 +342,8 @@ getSuperVisor(){
                   height: 10.0,
                 ),
                 ListTile(
-                  leading: Icon(Icons.app_settings_alt,
+                  leading: Icon(
+                    Icons.app_settings_alt,
                     color: AppColors.secondaryVariantColor,
                   ),
                   title: Text('عن التطبيق'),
@@ -353,7 +359,8 @@ getSuperVisor(){
                   height: 10.0,
                 ),
                 ListTile(
-                  leading: Icon(Icons.logout,
+                  leading: Icon(
+                    Icons.logout,
                     color: AppColors.secondaryVariantColor,
                   ),
                   title: Text('تسجيل خروج '),
@@ -390,9 +397,10 @@ getSuperVisor(){
           ),
         ),
         body: Column(
-
           children: [
-            SizedBox(height: 5,),
+            SizedBox(
+              height: 5,
+            ),
             Container(
               height: 200,
               child: CarouselSlider(
@@ -413,7 +421,8 @@ getSuperVisor(){
                         // width: MediaQuery.of(context).size.width,
                         // margin: EdgeInsets.symmetric(horizontal: 5.0),
                         decoration: BoxDecoration(
-                            image: DecorationImage(image: AssetImage(i) , fit:BoxFit.cover)),
+                            image: DecorationImage(
+                                image: AssetImage(i), fit: BoxFit.cover)),
                       );
                     },
                   );
@@ -437,25 +446,26 @@ getSuperVisor(){
                     child: Container(
                       padding: EdgeInsets.all(5.0),
                       decoration: BoxDecoration(
-                        color: AppColors.whiteColor  ,
-  borderRadius :   BorderRadius.all(Radius.circular(20))
-                      ),
+                          color: AppColors.whiteColor,
+                          borderRadius: BorderRadius.all(Radius.circular(20))),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Container(
                               height: 60.0.sp,
                               width: 60.0.sp,
-                              margin: EdgeInsets.only(left: 5.0  ,  right: 5.0),
+                              margin: EdgeInsets.only(left: 5.0, right: 5.0),
                               decoration: BoxDecoration(
                                   image: DecorationImage(
                                       image: AssetImage(
-                                          'assets/images/profile.png' ,
-                                           
-                                          
-                                          ) ,  fit:BoxFit.contain ) ,
+                                        'assets/images/profile.png',
+                                      ),
+                                      fit: BoxFit.contain),
                                   shape: BoxShape.circle)),
-                          Expanded(child: Text('الملف الشخصي' ,  style:TextStyle(fontWeight: FontWeight.w600)))
+                          Expanded(
+                              child: Text('الملف الشخصي',
+                                  style:
+                                      TextStyle(fontWeight: FontWeight.w600)))
                         ],
                       ),
                     ),
@@ -465,24 +475,21 @@ getSuperVisor(){
                       Get.to(Events());
                     },
                     child: Container(
-                       padding: EdgeInsets.all(5.0),
+                      padding: EdgeInsets.all(5.0),
                       decoration: BoxDecoration(
                           color: AppColors.whiteColor,
                           borderRadius: BorderRadius.all(Radius.circular(20))),
                       child: Column(
                         children: [
                           Container(
-                             height: 60.0.sp,
-                              width: 60.0.sp,
-                              decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                      image:
-                                          AssetImage('assets/images/news.png'),
-fit: BoxFit.contain
-                                          
-                                          
-                                          ),
-                                  shape: BoxShape.circle) ,    ),
+                            height: 60.0.sp,
+                            width: 60.0.sp,
+                            decoration: BoxDecoration(
+                                image: DecorationImage(
+                                    image: AssetImage('assets/images/news.png'),
+                                    fit: BoxFit.contain),
+                                shape: BoxShape.circle),
+                          ),
                           Text('الأخبار',
                               style: TextStyle(fontWeight: FontWeight.w600))
                         ],
@@ -494,22 +501,20 @@ fit: BoxFit.contain
                       Get.to(WebSite());
                     },
                     child: Container(
-                       padding: EdgeInsets.all(5.0),
+                      padding: EdgeInsets.all(5.0),
                       decoration: BoxDecoration(
                           color: AppColors.whiteColor,
                           borderRadius: BorderRadius.all(Radius.circular(20))),
                       child: Column(
                         children: [
                           Container(
-                                height: 60.0.sp,
+                              height: 60.0.sp,
                               width: 60.0.sp,
                               decoration: BoxDecoration(
                                   image: DecorationImage(
                                       image: AssetImage(
                                           'assets/images/website.png'),
-                                          fit:BoxFit.contain
-                                          
-                                          ),
+                                      fit: BoxFit.contain),
                                   shape: BoxShape.circle)),
                           Text('صفحة الكلية',
                               style: TextStyle(fontWeight: FontWeight.w600))
@@ -522,24 +527,20 @@ fit: BoxFit.contain
                       Get.to(Teachers());
                     },
                     child: Container(
-                       padding: EdgeInsets.all(5.0),
+                      padding: EdgeInsets.all(5.0),
                       decoration: BoxDecoration(
                           color: AppColors.whiteColor,
                           borderRadius: BorderRadius.all(Radius.circular(20))),
                       child: Column(
                         children: [
                           Container(
-                               height: 60.0.sp,
+                              height: 60.0.sp,
                               width: 60.0.sp,
                               decoration: BoxDecoration(
                                   image: DecorationImage(
                                       image: AssetImage(
-                                          'assets/images/teacher.png') ,
-                                          
-                                          
-                                          fit: BoxFit.contain
-                                          
-                                          ),
+                                          'assets/images/teacher.png'),
+                                      fit: BoxFit.contain),
                                   shape: BoxShape.circle)),
                           Text('الأساتذة',
                               style: TextStyle(fontWeight: FontWeight.w600))
@@ -552,23 +553,20 @@ fit: BoxFit.contain
                       Get.to(Semsters());
                     },
                     child: Container(
- padding: EdgeInsets.all(5.0),
+                      padding: EdgeInsets.all(5.0),
                       decoration: BoxDecoration(
                           color: AppColors.whiteColor,
                           borderRadius: BorderRadius.all(Radius.circular(20))),
-
-
-
                       child: Column(
                         children: [
                           Container(
-                            
-                              height:   60.0.sp,
+                              height: 60.0.sp,
                               width: 60.0.sp,
                               decoration: BoxDecoration(
                                   image: DecorationImage(
                                       image:
-                                          AssetImage('assets/images/time.png') ,  fit:BoxFit.contain),
+                                          AssetImage('assets/images/time.png'),
+                                      fit: BoxFit.contain),
                                   shape: BoxShape.circle)),
                           Text('الجدول',
                               style: TextStyle(fontWeight: FontWeight.w600))
@@ -576,26 +574,24 @@ fit: BoxFit.contain
                       ),
                     ),
                   ),
-
-
-
-                     InkWell(
+                  InkWell(
                     onTap: () {
                       Get.to(Subjects(supervisor));
                     },
                     child: Container(
-                       padding: EdgeInsets.all(5.0),
+                      padding: EdgeInsets.all(5.0),
                       decoration: BoxDecoration(
                           color: AppColors.whiteColor,
                           borderRadius: BorderRadius.all(Radius.circular(20))),
                       child: Column(
                         children: [
                           Container(
-                            height: 60.0.sp,
+                              height: 60.0.sp,
                               width: 60.0.sp,
                               decoration: BoxDecoration(
                                   image: DecorationImage(
-                                      image: AssetImage('assets/images/subject.png'),
+                                      image: AssetImage(
+                                          'assets/images/subject.png'),
                                       fit: BoxFit.contain),
                                   shape: BoxShape.circle)),
                           Text('المواد',
@@ -604,26 +600,24 @@ fit: BoxFit.contain
                       ),
                     ),
                   ),
-
-
-                    InkWell(
+                  InkWell(
                     onTap: () {
                       Get.to(StudentsOptions());
                     },
                     child: Container(
-                       padding: EdgeInsets.all(5.0),
+                      padding: EdgeInsets.all(5.0),
                       decoration: BoxDecoration(
                           color: AppColors.whiteColor,
                           borderRadius: BorderRadius.all(Radius.circular(20))),
                       child: Column(
                         children: [
                           Container(
-                            height: 60.0.sp,
+                              height: 60.0.sp,
                               width: 60.0.sp,
                               decoration: BoxDecoration(
                                   image: DecorationImage(
-                                      image:
-                                          AssetImage('assets/images/students.png'),
+                                      image: AssetImage(
+                                          'assets/images/students.png'),
                                       fit: BoxFit.contain),
                                   shape: BoxShape.circle)),
                           Text('الطلاب',
@@ -632,14 +626,12 @@ fit: BoxFit.contain
                       ),
                     ),
                   ),
-
-                  
-                    InkWell(
+                  InkWell(
                     onTap: () {
                       Get.to(AddEvent());
                     },
                     child: Container(
-                       padding: EdgeInsets.all(5.0),
+                      padding: EdgeInsets.all(5.0),
                       decoration: BoxDecoration(
                           color: AppColors.whiteColor,
                           borderRadius: BorderRadius.all(Radius.circular(20))),
@@ -667,7 +659,5 @@ fit: BoxFit.contain
         ),
       ),
     );
-
-   
   }
 }
