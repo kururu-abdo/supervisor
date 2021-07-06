@@ -107,8 +107,8 @@ main() async {
     if (payload != null) {}
     var playloadData = json.decode(payload);
 
-    var me = User.fromJson(playloadData['receiver']);
-    var user = User.fromJson(playloadData['sender']);
+    var me = User.fromJson(json.decode(playloadData['receiver']));
+    var user = User.fromJson(json.decode(playloadData['sender']));
 
     Get.to(ChatPage(user: user, me: me));
   });
