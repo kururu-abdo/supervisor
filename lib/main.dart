@@ -52,7 +52,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   if (notification != null && android != null) {
     DBProvider.db.newNotification(LocalNotification(
         title: notification.title,
-        object: json.encode(message.data),
+        object: json.encode(message.data["data"]),
         body: notification.body,
         time: DateTime.now().millisecondsSinceEpoch));
     flutterLocalNotificationsPlugin.show(
@@ -237,6 +237,7 @@ class _HomeState extends State<HomePage> {
     subscribe();
   }
 void subscribe() async{
+
    FCMConfig.subscripeToTopic('supervisor'+supervisor.id);
 }
   @override

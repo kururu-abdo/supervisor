@@ -28,7 +28,7 @@ RemoteNotification notification = message.notification;
     if (notification != null && android != null) {
   DBProvider.db.newNotification(LocalNotification(
         title: notification.title,
-        object: json.encode(message.data),
+        object: json.encode(message.data["data"]),
         body: notification.body,
         time: DateTime.now().millisecondsSinceEpoch));
     flutterLocalNotificationsPlugin.show(
@@ -50,7 +50,7 @@ RemoteNotification notification = message.notification;
         // ),
          , 
       ) ,  
-      
+      payload: json.encode(message.data["data"])
       
       );
 
@@ -64,7 +64,7 @@ RemoteNotification notification = message.notification;
         if (notification != null && android != null) {
   DBProvider.db.newNotification(LocalNotification(
         title: notification.title,
-        object: json.encode(message.data),
+        object: json.encode(message.data["data"]),
         body: notification.body,
         time: DateTime.now().millisecondsSinceEpoch));
     flutterLocalNotificationsPlugin.show(
@@ -110,7 +110,7 @@ RemoteNotification notification = message.notification;
            if (notification != null && android != null) {
   DBProvider.db.newNotification(LocalNotification(
         title: notification.title,
-        object: json.encode(message.data),
+        object: json.encode(message.data["data"]),
         body: notification.body,
         time: DateTime.now().millisecondsSinceEpoch));
     flutterLocalNotificationsPlugin.show(
@@ -133,7 +133,7 @@ RemoteNotification notification = message.notification;
          
       ) ,  
       
-      
+      payload :  json.encode(message.data["data"])
       );
 
     }
