@@ -12,6 +12,7 @@ import 'package:app3/model/models/supervisor.dart';
 import 'package:app3/screens/add_event.dart';
 import 'package:app3/screens/chat_page.dart';
 import 'package:app3/screens/departments.dart';
+import 'package:app3/screens/notification_page.dart';
 import 'package:app3/util/app.dart';
 import 'package:app3/util/fcm_config.dart';
 import 'package:app3/util/local_database.dart';
@@ -148,6 +149,9 @@ class MyApp extends StatelessWidget {
                   Locale('en', 'US'),
                   Locale('ar', ''),
                 ],
+                routes :{
+                  NotificationPage.page_id : (ontext)=>NotificationPage()
+                } ,
                 theme: ThemeData.from(
                     colorScheme: ColorScheme.light(
                         primary: Colors.green,
@@ -221,7 +225,7 @@ class _HomeState extends State<HomePage> {
     });
 
 
-    FCMConfig.subscripeToTopic('supervisor'+supervisor.id);
+   
   }
 
   @override
@@ -230,8 +234,11 @@ class _HomeState extends State<HomePage> {
     FirebaseInit.init();
     BackendlessInit().init();
     getSuperVisor();
+    subscribe();
   }
-
+void subscribe() async{
+   FCMConfig.subscripeToTopic('supervisor'+supervisor.id);
+}
   @override
   Widget build(BuildContext context) {
     var main_provider = Provider.of<MainProvider>(context);
@@ -244,7 +251,7 @@ class _HomeState extends State<HomePage> {
 actions: [
 
 IconButton(onPressed: (){
-  // Get.to(NotificationPage());
+  Get.to(NotificationPage());
 }, icon: Icon(Icons.notifications_active))
 
 
