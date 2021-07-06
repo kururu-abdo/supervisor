@@ -207,7 +207,12 @@ return InkWell(
                                           debugPrint("deleting");
                                           try {
                                             await mainProcider.deleteEventFile(
-                                                file, widget.document_id);
+                                                file, widget.document_id).then((value) {
+
+debugPrint("deleted");
+
+
+                                                });
                                           } catch (e) {
                                             debugPrint(e);
                                           }
