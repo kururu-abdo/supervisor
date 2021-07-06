@@ -10,6 +10,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:open_file/open_file.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class EventDetails extends StatefulWidget {
   final Map data;
@@ -180,8 +181,16 @@ return InkWell(
                               return Stack(children: [
                                 InkWell(
                                   onTap: () async {
-                                    FlutterFilePreview.openFile(file,
-                                        title: widget.data['body']);
+
+
+ if (await canLaunch(file)) {
+                                      await launch(file);
+                                    } else {
+                                      throw 'Unable to open url : $file';
+                                    }
+
+                                    // FlutterFilePreview.openFile(file,
+                                    //     title: widget.data['body']);
                                   },
                                   child: Container(
                                     margin: EdgeInsets.all(5.0),
