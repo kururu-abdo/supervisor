@@ -48,7 +48,6 @@ class _NotificationPageState extends State<NotificationPage> {
                         debugPrint(item.object);
                         var object = json.decode(item.object);
                         debugPrint(object.toString());
-                        var screen = object['screen'];
 
                         var data = json.decode(object["data"]);
                         //chat

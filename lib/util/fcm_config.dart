@@ -141,6 +141,7 @@ RemoteNotification notification = message.notification;
   }
 
 static subscripeToTopic(String topic){
+  debugPrint("subscribe to topic"+topic);
    FirebaseMessaging.instance.subscribeToTopic(topic);
 }
 static unSubscripeToTopic(String topic) {
