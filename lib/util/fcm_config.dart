@@ -103,41 +103,7 @@ RemoteNotification notification = message.notification;
 //    Get.toNamed('notification');
 //     }
 
-    FirebaseMessaging.onBackgroundMessage((message) async {
-      RemoteNotification notification = message.notification;
-      AndroidNotification android = message.notification.android;
-
-           if (notification != null && android != null) {
-  DBProvider.db.newNotification(LocalNotification(
-        title: notification.title,
-        object: json.encode(message.data),
-        body: notification.body,
-        time: DateTime.now().millisecondsSinceEpoch));
-    flutterLocalNotificationsPlugin.show(
-      notification?.hashCode,
-      notification.title,
-      notification.body,
-      NotificationDetails(
-      android  : AndroidNotificationDetails(
-            'channel', 'channelName', 'channelDescription')
-
-        // android:
-        //  AndroidNotificationDetails(
-        //   channel.id,
-        //   channel.name,
-        //   channel.description,
-        //   // TODO add a proper drawable resource to android, for now using
-        //   //      one that already exists in example app.
-        //   icon: 'launch_background',
-        // ),
-         
-      ) ,  
-      
-      payload :  json.encode(message.data)
-      );
-
-    }
-});
+  
   }
 
 static subscripeToTopic(String topic){
