@@ -47,13 +47,11 @@ class _NotificationPageState extends State<NotificationPage> {
                       onTap: () {
                         debugPrint(item.object);
                         var object = json.decode(item.object);
-                        debugPrint(object.toString());
-
-                        var data = json.decode(object["data"]);
+                     
                         //chat
                         if (object["type"] == "message") {
-                          var me = User.fromJson(object["receiver"]);
-                          var user = User.fromJson(object["sender"]);
+                          var me = User.fromJson(json.decode(object["receiver"]));
+                          var user = User.fromJson(json.decode(object["sender"]));
                           Get.to(ChatPage(me: me, user: user));
                         }
                         //event

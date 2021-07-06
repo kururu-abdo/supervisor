@@ -407,10 +407,9 @@ class _NewLectureState extends State<NewEvent> {
               'id': '1',
               'status': 'done',
               'screen': 'event_details',
-            "data": <String , dynamic> {
                 "type": "news",
                 'event_id': event_data.data()['id']
-            }
+            
             },
             'to': '/topics/${data['dept']['dept_code']}${data['dept']['id']}'
           },
@@ -469,10 +468,10 @@ class _NewLectureState extends State<NewEvent> {
               'click_action': 'FLUTTER_NOTIFICATION_CLICK',
               'id': '1',
               'status': 'done',
-             "data": <String, dynamic>{
+             
                 "type": "news",
                 'event_id': event_data.data()['id']
-              }
+              
             },
             'to': '/topics/${data['dept']['dept_code']}level${data['level']['id']}'
           },

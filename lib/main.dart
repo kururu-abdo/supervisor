@@ -52,7 +52,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   if (notification != null && android != null) {
     DBProvider.db.newNotification(LocalNotification(
         title: notification.title,
-        object: json.encode(message.data["data"]),
+        object: json.encode(message.data),
         body: notification.body,
         time: DateTime.now().millisecondsSinceEpoch));
     flutterLocalNotificationsPlugin.show(
@@ -75,7 +75,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
           //   icon: 'launch_background',
           // ),
         ),
-        payload: json.encode(message.data['data']));
+        payload: json.encode(message.data));
   }
   //Get.toNamed('/notification');
 }
