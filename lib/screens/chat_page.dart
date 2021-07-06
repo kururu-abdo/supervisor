@@ -121,7 +121,7 @@ class _MyHomePageState extends State<ChatPage> {
                       onPressed: () async {
                         var uuid = Uuid(options: {'grng': UuidUtil.cryptoRNG});
                         await chats.add({
-                          'chat_id': widget.me.name + widget.user.name,
+                          'chat_id': widget.me.id.toString() + widget.user.id.toString(),
                           'id': uuid.v1(),
                           'message': _controller.text,
                           'time': Timestamp.now(),
@@ -150,10 +150,10 @@ class _MyHomePageState extends State<ChatPage> {
                                 'id': '1',
                                 'status': 'done',
                                 'screen': 'chat',
-                                'data': <dynamic, dynamic>{
+                                   "type":   "message" ,
                                   'sender': widget.me.toJson(),
                                   'receiver': widget.user.toJson()
-                                }
+                                
                               },
                               'to':
                                   '/topics/teacher${widget.user.id.toString()}'
